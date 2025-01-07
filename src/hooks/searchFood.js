@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const searchFood = async (query, page = 0) => {
   try {
+    // https://tgfood-production.up.railway.app/food-search
     const response = await axios.get(
       "https://tgfood-production.up.railway.app/food-search",
       {
@@ -10,6 +11,7 @@ export const searchFood = async (query, page = 0) => {
     );
     // Проверяем, что в ответе есть объект 'foods' и массив 'food'
     if (response.data && response.data.foods && response.data.foods.food) {
+      console.log(response.data);
       return response.data.foods.food; // Возвращаем массив продуктов
     } else {
       return []; // Если нет продуктов, возвращаем пустой массив

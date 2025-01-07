@@ -17,7 +17,6 @@ export const App = () => {
     <Container>
       <Header />
       <SearchForm></SearchForm>
-      {isSubmitted && <span>work</span>}
       {isSubmitted && <ResultsTable />}
     </Container>
   );

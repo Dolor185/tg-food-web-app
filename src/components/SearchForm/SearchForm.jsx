@@ -1,29 +1,34 @@
 import { useState, useContext } from "react";
 import { ProductContext } from "../../context/ProductContext";
+import { Form, Label, Input, Button } from "./SearchForm.styled";
+
 export const SearchForm = () => {
   const { setProduct, setIsSubmitted } = useContext(ProductContext);
   const [localProduct, setLocalProduct] = useState("");
+
   const handleChange = (e) => {
     setLocalProduct(e.target.value);
   };
+
   const submitForm = (e) => {
     e.preventDefault();
     setProduct(localProduct);
     setIsSubmitted(true);
   };
+
   return (
-    <form onSubmit={submitForm}>
-      <label>
-        Product
-        <input
+    <Form onSubmit={submitForm}>
+      <Label>
+        Write your meal
+        <Input
           onChange={handleChange}
           value={localProduct}
           type="text"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          title="Field may contain only latin letters"
           required
         />
-      </label>
-      <button type="submit">Search</button>
-    </form>
+      </Label>
+      <Button type="submit">Search</Button>
+    </Form>
   );
 };
