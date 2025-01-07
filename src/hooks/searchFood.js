@@ -3,7 +3,7 @@ import axios from "axios";
 export const searchFood = async (query, page = 0) => {
   try {
     const response = await axios.get(
-      "http://tgfood-production.up.railway.app/food-search",
+      "https://tgfood-production.up.railway.app/food-search",
       {
         params: { query, page },
       }
