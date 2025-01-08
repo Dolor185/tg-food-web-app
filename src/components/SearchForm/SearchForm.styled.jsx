@@ -12,6 +12,8 @@ export const Form = styled.form`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   margin: 0 auto;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
 
   @media (max-width: 480px) {
     width: 90%; /* Уменьшаем ширину на мобильных */

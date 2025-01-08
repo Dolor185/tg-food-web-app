@@ -1,5 +1,5 @@
 // ResultsTable.styled.js
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Ul = styled.ul`
   display: grid;
@@ -7,6 +7,8 @@ export const Ul = styled.ul`
   gap: 16px;
   list-style: none;
   padding: 0;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(
@@ -86,5 +88,81 @@ export const PageButton = styled.button`
   @media (max-width: 480px) {
     font-size: 0.9rem;
     padding: 8px 16px;
+  }
+`;
+// анимация для модального окна
+const fadeInScale = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+`;
+
+const fadeOutScale = keyframes`
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+`;
+
+// Оверлей для затемнения фона
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+`;
+
+// Контент модального окна
+export const ModalContent = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+  animation: ${({ isClosing }) => (isClosing ? fadeOutScale : fadeInScale)} 0.3s
+    ease;
+
+  h2 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  p {
+    margin: 8px 0;
+    color: #666;
+  }
+`;
+
+// Кнопка закрытия модального окна
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+
+  &:hover {
+    color: #40a7e3;
   }
 `;

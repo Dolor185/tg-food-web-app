@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { ProductContext } from "../../context/ProductContext";
 import { searchFood } from "../../hooks/searchFood";
 import { ClipLoader } from "react-spinners";
+import { convertServing } from "../../hooks/convertServing";
 import {
   Ul,
   ListItem,
@@ -9,6 +10,9 @@ import {
   ProductDescription,
   ButtonContainer,
   PageButton,
+  ModalOverlay,
+  ModalContent,
+  CloseButton,
 } from "./ResultsTable.styled";
 
 export const ResultsTable = () => {
@@ -17,6 +21,10 @@ export const ResultsTable = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     if (!product) return;
@@ -38,6 +46,7 @@ export const ResultsTable = () => {
 
     fetchResults();
   }, [product, currentPage]);
+
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
@@ -45,6 +54,27 @@ export const ResultsTable = () => {
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
   };
+
+  const openModal = (product) => {
+    const nutrition = convertServing(product.food_description);
+    const { calories, fat, carbs, protein } = nutrition;
+    product.calories = calories;
+    product.fat = fat;
+    product.carbs = carbs;
+    product.protein = protein;
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsModalOpen(false);
+      setIsClosing(false);
+      setSelectedProduct(null);
+    }, 300);
+  };
+
   if (loading) {
     return (
       <div>
@@ -63,7 +93,7 @@ export const ResultsTable = () => {
 
   const productList = results.map((product) => {
     return (
-      <ListItem key={product.food_id}>
+      <ListItem key={product.food_id} onClick={() => openModal(product)}>
         <ProductName>{product.food_name}</ProductName>
         <ProductDescription>{product.food_description}</ProductDescription>
       </ListItem>
@@ -79,6 +109,21 @@ export const ResultsTable = () => {
         )}
         <PageButton onClick={handleNextPage}>Next Page</PageButton>
       </ButtonContainer>
+
+      {isModalOpen && (
+        <>
+          <ModalOverlay isClosing={isClosing} onClick={closeModal} />
+          <ModalContent isClosing={isClosing}>
+            <CloseButton onClick={closeModal}>×</CloseButton>
+            <h2>{selectedProduct.food_name}</h2>
+            <p>{selectedProduct.food_description}</p>
+            <p>
+              Calories: {selectedProduct.calories} kcal, prot :
+              {selectedProduct.protein}
+            </p>
+          </ModalContent>
+        </>
+      )}
     </div>
   );
 };
