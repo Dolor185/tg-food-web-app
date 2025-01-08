@@ -4,7 +4,7 @@ export const convertServing = (description) => {
   );
   if (!match) return null;
 
-  const [_, serving, calories, fat, carbs, protein] = match;
+  const [serving, calories, fat, carbs, protein] = match;
 
   // Определяем коэффициент конверсии
   let conversionFactor = 1;
