@@ -3,6 +3,7 @@ import { ProductContext } from "../../context/ProductContext";
 import { searchFood } from "../../hooks/searchFood";
 import { ClipLoader } from "react-spinners";
 import { convertServing } from "../../hooks/convertServing";
+import { Modal } from "../Modal/Modal";
 import {
   Ul,
   ListItem,
@@ -10,9 +11,6 @@ import {
   ProductDescription,
   ButtonContainer,
   PageButton,
-  ModalOverlay,
-  ModalContent,
-  CloseButton,
 } from "./ResultsTable.styled";
 
 export const ResultsTable = () => {
@@ -110,20 +108,12 @@ export const ResultsTable = () => {
         <PageButton onClick={handleNextPage}>Next Page</PageButton>
       </ButtonContainer>
 
-      {isModalOpen && (
-        <>
-          <ModalOverlay isClosing={isClosing} onClick={closeModal} />
-          <ModalContent isClosing={isClosing}>
-            <CloseButton onClick={closeModal}>×</CloseButton>
-            <h2>{selectedProduct.food_name}</h2>
-            <p>{selectedProduct.food_description}</p>
-            <p>
-              Calories: {selectedProduct.calories} kcal, prot :
-              {selectedProduct.protein}
-            </p>
-          </ModalContent>
-        </>
-      )}
+      <Modal
+        isOpen={isModalOpen}
+        isClosing={isClosing}
+        onClose={closeModal}
+        product={selectedProduct}
+      />
     </div>
   );
 };
