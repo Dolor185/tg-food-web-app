@@ -3,13 +3,11 @@ import { ModalOverlay, ModalContent, CloseButton } from "./Modal.styled";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { useState } from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 export const Modal = ({ isOpen, isClosing, onClose, product }) => {
   if (!isOpen) return null;
-  const [value, setValue] = useState("");
 
   const data = {
     labels: ["Protein", "Fat", "Carbs"],
