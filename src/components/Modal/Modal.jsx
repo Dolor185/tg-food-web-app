@@ -3,11 +3,19 @@ import { ModalOverlay, ModalContent, CloseButton } from "./Modal.styled";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { useState } from "react";
+import axios from "axios";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 export const Modal = ({ isOpen, isClosing, onClose, product }) => {
   if (!isOpen) return null;
+
+  const [value, setValue] = useState("");
+  const url = process.env.URL;
+
+  const tg = window.Telegram.WebApp;
+  const user = tg.initDataUnsafe?.user?.id;
 
   const data = {
     labels: ["Protein", "Fat", "Carbs"],
@@ -33,16 +41,60 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
     },
   };
 
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+    const factor = parseFloat(value) / 100;
+    const nutrients = {
+      calories: product.calories * factor,
+      protein: product.protein * factor,
+      fat: product.fat * factor,
+      carbs: product.carbs * factor,
+    };
+
+    const products = {
+      id: product.food_id,
+      name: product.food_name,
+      amount: Number(value),
+      nutrients: {
+        calories: product.calories * factor,
+        protein: product.protein * factor,
+        fat: product.fat * factor,
+        carbs: product.carbs * factor,
+      },
+    };
+
+    await axios.get(`${url}/add-update`, {
+      params: {
+        nutrients: JSON.stringify(nutrients),
+        user,
+        products: JSON.stringify(products),
+      },
+    });
+
+    // onClose();
+  };
+
   return (
     <>
-      <ModalOverlay isClosing={isClosing} onClick={onClose}>
-        <ModalContent isClosing={isClosing}>
+      <ModalOverlay $isClosing={isClosing}>
+        <ModalContent $isClosing={isClosing}>
           <CloseButton onClick={onClose}>×</CloseButton>
           <h2>{product.food_name}</h2>
-          <form>
+          <form onSubmit={submitForm}>
             <label>
-              <input />
+              Weight
+              <input
+                onChange={handleChange}
+                type="text"
+                title="Field may contain only latin letters"
+                value={value}
+              />
             </label>
+            <button type="submit">Add</button>
           </form>
           <p>Nutrients per 100g of product:</p>
           <p>Calories: {product.calories} kcal</p>

@@ -37,14 +37,14 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  position: relative;
+  position: absolute;
   background: #fff;
   padding: 20px;
   width: 80%;
   max-width: 400px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  z-index: 1001;
+  z-index: 2000;
   animation: ${({ isClosing }) => (isClosing ? fadeOutScale : fadeInScale)} 0.3s
     ease;
 
@@ -70,4 +70,8 @@ export const CloseButton = styled.button`
   &:hover {
     color: #40a7e3;
   }
+`;
+
+export const Product = styled.div`
+  display: flex;
 `;

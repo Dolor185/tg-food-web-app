@@ -4,12 +4,10 @@ export const searchFood = async (query, page = 0) => {
   try {
     // http://localhost:3000/food-search
     // https://tgfood-production.up.railway.app/food-search
-    const response = await axios.get(
-      "https://tgfood-production.up.railway.app/food-search",
-      {
-        params: { query, page },
-      }
-    );
+    const url = process.env.URL;
+    const response = await axios.get(`${url}/food-search`, {
+      params: { query, page },
+    });
     // Проверяем, что в ответе есть объект 'foods' и массив 'food'
     if (response.data && response.data.foods && response.data.foods.food) {
       console.log(response.data);

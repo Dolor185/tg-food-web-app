@@ -62,6 +62,7 @@ export const ResultsTable = () => {
     product.protein = protein;
     setSelectedProduct(product);
     setIsModalOpen(true);
+    console.log("product", product);
   };
 
   const closeModal = () => {
