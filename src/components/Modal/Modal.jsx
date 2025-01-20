@@ -67,7 +67,7 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
       },
     };
 
-    await axios.get(`${url}/add-update`, {
+    await axios.get(`https://tgfood-production.up.railway.app/add-update`, {
       params: {
         nutrients: JSON.stringify(nutrients),
         user,
