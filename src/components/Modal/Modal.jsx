@@ -12,7 +12,6 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
   if (!isOpen) return null;
 
   const [value, setValue] = useState("");
-  const url = process.env.URL;
 
   const tg = window.Telegram.WebApp;
   const user = tg.initDataUnsafe?.user?.id;
