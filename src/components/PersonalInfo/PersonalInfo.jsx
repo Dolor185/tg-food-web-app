@@ -12,7 +12,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const tg = window.Telegram.WebApp;
   const user = tg.initDataUnsafe?.user?.id;
 
-  const url = process.env.URL;
+  // const url = process.env.URL;
 
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
@@ -22,9 +22,12 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
 
     const getData = async () => {
       try {
-        const response = await axios.get(`${url}/check-nutrients`, {
-          params: { user },
-        });
+        const response = await axios.get(
+          `https://tgfood-production.up.railway.app/check-nutrients`,
+          {
+            params: { user },
+          }
+        );
         setData(response.data[0].totalNutrients);
         setProducts(response.data[0].products);
       } catch (error) {
@@ -66,9 +69,12 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
               <button
                 onClick={async () => {
                   try {
-                    await axios.delete(`${url}/delete-product`, {
-                      params: { productId: product.id, user },
-                    });
+                    await axios.delete(
+                      `https://tgfood-production.up.railway.app/delete-product`,
+                      {
+                        params: { productId: product.id, user },
+                      }
+                    );
                   } catch (error) {
                     console.error("Ошибка при удалении продукта:", error);
                   }
