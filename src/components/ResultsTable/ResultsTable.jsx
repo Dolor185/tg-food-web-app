@@ -2,13 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { ProductContext } from "../../context/ProductContext";
 import { searchFood } from "../../hooks/searchFood";
 import { ClipLoader } from "react-spinners";
-import { convertServing } from "../../hooks/convertServing";
+
 import { Modal } from "../Modal/Modal";
 import {
   Ul,
   ListItem,
   ProductName,
-  ProductDescription,
   ButtonContainer,
   PageButton,
 } from "./ResultsTable.styled";
@@ -54,15 +53,9 @@ export const ResultsTable = () => {
   };
 
   const openModal = (product) => {
-    const nutrition = convertServing(product.food_description);
-    const { calories, fat, carbs, protein } = nutrition;
-    product.calories = calories;
-    product.fat = fat;
-    product.carbs = carbs;
-    product.protein = protein;
     setSelectedProduct(product);
     setIsModalOpen(true);
-    console.log("product", product);
+    console.log("Selected product:", product);
   };
 
   const closeModal = () => {
@@ -94,7 +87,7 @@ export const ResultsTable = () => {
     return (
       <ListItem key={product.food_id} onClick={() => openModal(product)}>
         <ProductName>{product.food_name}</ProductName>
-        <ProductDescription>{product.food_description}</ProductDescription>
+        {/* <ProductDescription>{product.food_description}</ProductDescription> */}
       </ListItem>
     );
   });

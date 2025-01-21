@@ -12,7 +12,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const tg = window.Telegram.WebApp;
   const user = tg.initDataUnsafe?.user?.id;
 
-  // const url = process.env.URL;
+  const url = process.env.REACT_APP_URL;
 
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
@@ -22,12 +22,9 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
 
     const getData = async () => {
       try {
-        const response = await axios.get(
-          `https://tgfood-production.up.railway.app/check-nutrients`,
-          {
-            params: { user },
-          }
-        );
+        const response = await axios.get(`${url}/check-nutrients`, {
+          params: { user },
+        });
         setData(response.data[0].totalNutrients);
         setProducts(response.data[0].products);
       } catch (error) {
@@ -36,21 +33,21 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
     };
 
     getData();
-  }, [isOpen, user]);
+  }, [isOpen, user, data]);
+  const handleDelete = async (productId) => {
+    try {
+      await axios.get(`${url}/delete-product`, {
+        params: { productId, user },
+      });
 
-  if (data) {
-    console.log(data);
-  }
-
-  // const deleteProduct = async (id) => {
-  //   try {
-  //     await axios.delete("http://localhost:3000/delete-product", {
-  //       params: { id },
-  //     });
-  //   } catch (error) {
-  //     console.error("Ошибка при удалении продукта:", error);
-  //   }
-  // };
+      // Удаляем продукт из состояния
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== productId)
+      );
+    } catch (error) {
+      console.error("Ошибка при удалении продукта:", error);
+    }
+  };
 
   return (
     <>
@@ -65,23 +62,10 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
           products.map((product) => (
             <Product key={product.id}>
               <p>{product.name}</p>
-              <p>{product.amount}g</p>
-              <button
-                onClick={async () => {
-                  try {
-                    await axios.delete(
-                      `https://tgfood-production.up.railway.app/delete-product`,
-                      {
-                        params: { productId: product.id, user },
-                      }
-                    );
-                  } catch (error) {
-                    console.error("Ошибка при удалении продукта:", error);
-                  }
-                }}
-              >
-                delete
-              </button>
+              <p>
+                {product.amount}( {product.metric_serving_unit})
+              </p>
+              <button onClick={() => handleDelete(product.id)}>delete</button>
             </Product>
           ))}
       </ModalContent>

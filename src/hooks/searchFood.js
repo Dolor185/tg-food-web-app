@@ -1,20 +1,21 @@
 import axios from "axios";
-
+const url = process.env.REACT_APP_URL;
 export const searchFood = async (query, page = 0) => {
   try {
     // http://localhost:3000/food-search
     // https://tgfood-production.up.railway.app/food-search
-    // const url = process.env.URL;
-    const response = await axios.get(
-      `https://tgfood-production.up.railway.app/food-search`,
-      {
-        params: { query, page },
-      }
-    );
-    // Проверяем, что в ответе есть объект 'foods' и массив 'food'
-    if (response.data && response.data.foods && response.data.foods.food) {
+
+    const response = await axios.get(`${url}/food-search`, {
+      params: { query, page },
+    });
+
+    if (
+      response.data &&
+      response.data.foods_search &&
+      response.data.foods_search.results.food
+    ) {
       console.log(response.data);
-      return response.data.foods.food; // Возвращаем массив продуктов
+      return response.data.foods_search.results.food;
     } else {
       return []; // Если нет продуктов, возвращаем пустой массив
     }
