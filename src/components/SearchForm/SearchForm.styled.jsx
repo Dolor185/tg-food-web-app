@@ -81,3 +81,33 @@ export const Button = styled.button`
     padding: 8px 12px;
   }
 `;
+export const ScannerOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const ScannerContainer = styled.div`
+  position: relative;
+  width: 80%;
+  max-width: 640px;
+  height: 480px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+export const CloseButton = styled(Button)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff0000;
+  color: #fff;
+`;

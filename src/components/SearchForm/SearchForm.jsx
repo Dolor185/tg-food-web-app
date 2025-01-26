@@ -1,10 +1,20 @@
 import { useState, useContext } from "react";
 import { ProductContext } from "../../context/ProductContext";
-import { Form, Label, Input, Button } from "./SearchForm.styled";
+import {
+  Form,
+  Label,
+  Input,
+  Button,
+  ScannerOverlay,
+  ScannerContainer,
+  CloseButton,
+} from "./SearchForm.styled";
+import { BarcodeScanner } from "../BarcodeScanner/BarcodeScanner";
 
 export const SearchForm = () => {
   const { setProduct, setIsSubmitted } = useContext(ProductContext);
   const [localProduct, setLocalProduct] = useState("");
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   const handleChange = (e) => {
     setLocalProduct(e.target.value);
@@ -15,20 +25,39 @@ export const SearchForm = () => {
     setProduct(localProduct);
     setIsSubmitted(true);
   };
+  const handleBarcodeDetected = (code) => {
+    setLocalProduct(code);
+    setIsScannerOpen(false);
+  };
 
   return (
-    <Form onSubmit={submitForm}>
-      <Label>
-        Write your meal
-        <Input
-          onChange={handleChange}
-          value={localProduct}
-          type="text"
-          title="Field may contain only latin letters"
-          required
-        />
-      </Label>
-      <Button type="submit">Search</Button>
-    </Form>
+    <>
+      <Form onSubmit={submitForm}>
+        <Label>
+          Write your meal
+          <Input
+            onChange={handleChange}
+            value={localProduct}
+            type="text"
+            title="Field may contain only latin letters"
+            required
+          />
+        </Label>
+        <Button type="submit">Search</Button>
+        <Button type="button" onClick={() => setIsScannerOpen(true)}>
+          Scan Barcode
+        </Button>
+      </Form>
+      {isScannerOpen && (
+        <ScannerOverlay>
+          <ScannerContainer>
+            <BarcodeScanner onDetected={handleBarcodeDetected} />
+            <CloseButton type="button" onClick={() => setIsScannerOpen(false)}>
+              Close Scanner
+            </CloseButton>
+          </ScannerContainer>
+        </ScannerOverlay>
+      )}
+    </>
   );
 };
