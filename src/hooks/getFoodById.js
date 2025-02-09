@@ -1,8 +1,9 @@
 import axios from "axios";
 
+const url = process.env.REACT_APP_URL;
 export const getFoodById = async (id) => {
   try {
-    const response = await axios.get("http://localhost:3000/food-details", {
+    const response = await axios.get(`${url}/food-details`, {
       params: { id },
     });
     // Проверяем, что в ответе есть объект 'foods' и массив 'food'

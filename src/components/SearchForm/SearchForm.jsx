@@ -10,6 +10,8 @@ import {
   CloseButton,
 } from "./SearchForm.styled";
 import { BarcodeScanner } from "../BarcodeScanner/BarcodeScanner";
+import { barcodeScan } from "../../hooks/barcodeScan";
+import { getFoodById } from "../../hooks/getFoodById";
 
 export const SearchForm = () => {
   const { setProduct, setIsSubmitted } = useContext(ProductContext);
@@ -26,8 +28,12 @@ export const SearchForm = () => {
     setIsSubmitted(true);
   };
   const handleBarcodeDetected = (code) => {
-    setLocalProduct(code);
     setIsScannerOpen(false);
+    const foodId = barcodeScan(code);
+
+    const food = getFoodById(foodId);
+
+    setProduct(food);
   };
 
   return (
