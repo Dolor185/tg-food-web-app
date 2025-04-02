@@ -5,29 +5,16 @@ import { Container } from "./App.styled";
 import { SearchForm } from "../SearchForm/SearchForm";
 import { ResultsTable } from "../ResultsTable/ResultsTable";
 import { PersonalInfo } from "../PersonalInfo/PersonalInfo";
-import { WelcomeModal } from "../welcomeModal/welcomeModal";
 
 export const App = () => {
   const { isSubmitted } = useContext(ProductContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [isFirstVisit, setIsFirstVisit] = useState(false);
-
-  
-
-
   useEffect(() => {
-    
-  const tg = window.Telegram.WebApp;
-
- 
+    const tg = window.Telegram.WebApp;
     tg.ready();
     console.log("Telegram WebApp is ready");
-    
-  
-   
   }, []);
-  
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -53,7 +40,6 @@ export const App = () => {
       />
       <SearchForm></SearchForm>
       {isSubmitted && <ResultsTable />}
-      {isFirstVisit && <WelcomeModal onClose={() => setIsFirstVisit(false)} />}
     </Container>
   );
 };
