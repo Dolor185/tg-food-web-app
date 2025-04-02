@@ -17,29 +17,15 @@ export const App = () => {
 
 
   useEffect(() => {
-    const url = process.env.REACT_APP_URL;
+    
   const tg = window.Telegram.WebApp;
 
-  const user = tg.initDataUnsafe?.user?.id;
+ 
     tg.ready();
     console.log("Telegram WebApp is ready");
     
   
-    const checkFirstVisit = async () => {
-      try {
-        const response = await fetch(`${url}/first-open`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user }),
-        });
-        const data = await response.json();
-        setIsFirstVisit(data.isFirstLogin);
-      } catch (error) {
-        console.error("Error fetching first login status:", error);
-      }
-    };
-  
-    checkFirstVisit();
+   
   }, []);
   
 
