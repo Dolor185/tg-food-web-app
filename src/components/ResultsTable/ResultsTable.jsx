@@ -30,6 +30,7 @@ export const ResultsTable = () => {
       setLoading(true);
       try {
         const response = await searchFood(product, currentPage);
+        console.log("API response:", response);
 
         setResults(response);
       } catch (err) {
