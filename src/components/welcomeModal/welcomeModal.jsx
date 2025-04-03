@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 export const WelcomeModal = ({ isOpen, onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
 
