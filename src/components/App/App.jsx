@@ -5,13 +5,31 @@ import { Container } from "./App.styled";
 import { SearchForm } from "../SearchForm/SearchForm";
 import { ResultsTable } from "../ResultsTable/ResultsTable";
 import { PersonalInfo } from "../PersonalInfo/PersonalInfo";
-
+import { WelcomeModal } from "../welcomeModal/welcomeModal";
+import axios from "axios";
 export const App = () => {
   const { isSubmitted } = useContext(ProductContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [isFirstVisit, setIsFirstVisit] = useState(false); 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
+    const user = tg.initDataUnsafe?.user?.id; // Получаем ID пользователя
+    const url = process.env.REACT_APP_URL;
+    console.log(user);
+
+    const  checkUser = async(user) => {
+      const response = await axios.get(`${url}/first-open`, {
+        params: {user},
+      });
+      if(response.data){
+        setIsFirstVisit(true)
+        return
+      }
+      return
+    }
+    checkUser(user)
+
     tg.ready();
     console.log("Telegram WebApp is ready");
   }, []);
@@ -40,6 +58,13 @@ export const App = () => {
       />
       <SearchForm></SearchForm>
       {isSubmitted && <ResultsTable />}
+      {isFirstVisit && (
+        <WelcomeModal isOpen={isModalOpen} onClose={()=>{
+          closeModal()
+          setIsFirstVisit(false)
+          
+        }} />
+      )}
     </Container>
   );
 };
