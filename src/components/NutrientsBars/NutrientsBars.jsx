@@ -49,7 +49,9 @@ const NutrientBar = ({ label, value, max, color }) => {
   callback: function(value) {
     return value === 0 || value === max ? value : '';
   },
-  color: "#666",
+  
+  background: 'var(--tg-theme-bg-color)',
+  color: 'var(--tg-theme-text-color)',
   font: {
     size: 14,
   },
@@ -60,7 +62,8 @@ const NutrientBar = ({ label, value, max, color }) => {
       },
       y: {
         ticks: {
-          color: "#333",
+          background: 'var(--tg-theme-bg-color)',
+  color: 'var(--tg-theme-text-color)',
           font: {
             size: 14,
           },
