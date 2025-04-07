@@ -75,7 +75,7 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
         
         {calories === null ? (
           <>
-            <h2>Welcome!</h2>
+            <h2>Welcome {tg.initDataUnsafe?.user?.username}!</h2>
             <p>Let's see your parameters and goals:</p>
             <Form onSubmit={handleSubmit}>
               <label>
@@ -111,8 +111,8 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
               <label>
                 Sex
                 <Select name="gender" value={formData.gender} onChange={handleChange}>
-                  <option value="male">Мужчина</option>
-                  <option value="female">Женщина</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </Select>
               </label>
               <label>
@@ -122,11 +122,11 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                   value={formData.activityLevel}
                   onChange={handleChange}
                 >
-                  <option value="sedentary">Сидячий образ жизни</option>
-                  <option value="light">Легкая активность</option>
-                  <option value="moderate">Умеренная активность</option>
-                  <option value="active">Интенсивные тренировки</option>
-                  <option value="very_active">Очень высокая активность</option>
+                  <option value="sedentary">Sedentary</option>
+                  <option value="light">Light</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="active">Active</option>
+                  <option value="very_active">Very active</option>
                 </Select>
               </label>
               <label>
