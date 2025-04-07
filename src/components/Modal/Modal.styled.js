@@ -66,6 +66,7 @@ export const CloseButton = styled.button`
   right: 10px;
   cursor: pointer;
   background: none;
+  color: var(--tg-theme-text-color);
   border: none;
   font-size: 1.5rem;
   &:hover {

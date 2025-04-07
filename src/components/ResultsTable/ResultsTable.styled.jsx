@@ -73,7 +73,7 @@ export const PageButton = styled.button`
   padding: 10px 20px;
   font-size: 1rem;
   background: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
+  color: #FFFFFF;
   background-color: #40a7e3;
   border: none;
   border-radius: 4px;

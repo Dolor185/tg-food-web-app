@@ -26,6 +26,7 @@ export const ModalContainer = styled.div`
 
 export const CloseButton = styled.button`
   position: absolute;
+  color: var(--tg-theme-text-color);
   top: 10px;
   right: 10px;
   background: none;
@@ -64,7 +65,7 @@ export const Button = styled.button`
   padding: 10px;
   background-color: #007bff;
   background: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
+  color: #FFFFFF;
   border: none;
   border-radius: 5px;
   cursor: pointer;

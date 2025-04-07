@@ -64,7 +64,7 @@ export const Button = styled.button`
   font-size: 1rem;
   font-weight: bold;
   background: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
+  color: #FFFFFF;
   background-color: #40a7e3;
   border: none;
   border-radius: 4px;
