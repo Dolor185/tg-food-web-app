@@ -64,8 +64,7 @@ export const Select = styled.select`
 export const Button = styled.button`
   padding: 10px;
   background-color: #007bff;
-  background: var(--tg-theme-bg-color);
-  color: #FFFFFF;
+  color: var(--tg-theme-text-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;
