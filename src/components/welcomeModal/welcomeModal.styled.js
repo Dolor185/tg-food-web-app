@@ -14,7 +14,8 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-  background: white;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   padding: 20px;
   border-radius: 10px;
   width: 400px;
@@ -37,6 +38,8 @@ export const Form = styled.form`
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
 `;
 
 export const Input = styled.input`
@@ -44,6 +47,8 @@ export const Input = styled.input`
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
 `;
 
 export const Select = styled.select`
@@ -51,12 +56,15 @@ export const Select = styled.select`
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
 `;
 
 export const Button = styled.button`
   padding: 10px;
   background-color: #007bff;
-  color: white;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;

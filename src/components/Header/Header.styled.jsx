@@ -3,7 +3,8 @@ export const Button = styled.button`
   padding: 10px 16px;
   font-size: 1rem;
   font-weight: bold;
-  color: #ffffff;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   background-color: #40a7e3;
   border: none;
   border-radius: 4px;

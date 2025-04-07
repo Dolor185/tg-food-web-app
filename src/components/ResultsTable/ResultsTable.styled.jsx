@@ -27,7 +27,8 @@ export const ListItem = styled.li`
   flex-direction: column;
   align-items: center;
   padding: 16px;
-  background-color: #f9f9f9;
+ background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -43,7 +44,8 @@ export const ProductName = styled.span`
   font-weight: bold;
   margin-bottom: 4px;
   text-align: center;
-
+background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   @media (max-width: 480px) {
     font-size: 1rem; /* Чуть меньше текст на телефонах */
   }
@@ -51,7 +53,8 @@ export const ProductName = styled.span`
 
 export const ProductDescription = styled.span`
   font-size: 0.9rem;
-  color: #666;
+background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   text-align: center;
 
   @media (max-width: 480px) {
@@ -69,7 +72,8 @@ export const ButtonContainer = styled.div`
 export const PageButton = styled.button`
   padding: 10px 20px;
   font-size: 1rem;
-  color: #ffffff;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   background-color: #40a7e3;
   border: none;
   border-radius: 4px;
@@ -130,7 +134,8 @@ export const ModalContent = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   padding: 20px;
   width: 80%;
   max-width: 400px;
@@ -142,12 +147,12 @@ export const ModalContent = styled.div`
 
   h2 {
     margin-top: 0;
-    color: #333;
+    c
   }
 
   p {
     margin: 8px 0;
-    color: #666;
+    
   }
 `;
 

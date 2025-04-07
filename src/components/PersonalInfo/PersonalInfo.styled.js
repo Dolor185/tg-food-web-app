@@ -38,7 +38,8 @@ export const ModalOverlay = styled.div`
 
 export const ModalContent = styled.div`
   position: absolute;
-  background: #fff;
+background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   padding: 20px;
   width: 80%;
   max-width: 400px;
@@ -50,12 +51,12 @@ export const ModalContent = styled.div`
 
   h2 {
     margin-top: 0;
-    color: #333;
+ 
   }
 
   p {
     margin: 8px 0;
-    color: #666;
+
   }
 `;
 

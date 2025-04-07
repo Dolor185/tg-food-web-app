@@ -6,14 +6,14 @@ export const Form = styled.form`
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background-color: #ffffff;
+background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   margin: 0 auto;
-  background: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
+
 
   @media (max-width: 480px) {
     width: 90%; /* Уменьшаем ширину на мобильных */
@@ -28,7 +28,8 @@ export const Label = styled.label`
   width: 100%;
   font-size: 1rem;
   font-weight: bold;
-  color: #333;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
 
   @media (max-width: 480px) {
     font-size: 0.9rem;
@@ -44,7 +45,8 @@ export const Input = styled.input`
   border-radius: 4px;
   box-sizing: border-box; /* Учитываем padding и border в ширине */
   transition: border-color 0.3s;
-
+background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   &:focus {
     border-color: #40a7e3;
     outline: none;
@@ -61,7 +63,8 @@ export const Button = styled.button`
   padding: 10px 16px;
   font-size: 1rem;
   font-weight: bold;
-  color: #ffffff;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
   background-color: #40a7e3;
   border: none;
   border-radius: 4px;
