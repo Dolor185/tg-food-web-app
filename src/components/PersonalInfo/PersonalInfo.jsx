@@ -16,6 +16,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
 
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
+  const [maxValues, setMaxValues] = useState({})
 
   useEffect(() => {
     if (!isOpen) return;
@@ -27,6 +28,11 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         });
         setData(response.data[0].totalNutrients);
         setProducts(response.data[0].products);
+
+        const limits = await axios.get(`${url}/limits`, {
+          params: { user },
+        });
+        setMaxValues(limits.data)
       } catch (error) {
         console.error("Ошибка при получении данных:", error);
       }
@@ -54,9 +60,9 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       <ModalOverlay $isClosing={isClosing} onClick={onClose} />
       <ModalContent $isClosing={isClosing}>
         <CloseButton onClick={onClose}>×</CloseButton>
-        <h2>Header Modal</h2>
-        <p>This is a modal from the Header component</p>
-        <p>{data && <NutrientBars data={data} />}</p>
+        <h2>{tg.initDataUnsafe?.user?.username}'s info</h2>
+        <p>Here is your nutrients limits and list of products</p>
+        <p>{data && <NutrientBars data={data} maxValues={maxValues}/>}</p>
 
         {products.length > 0 &&
           products.map((product) => (

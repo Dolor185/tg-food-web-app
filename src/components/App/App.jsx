@@ -12,6 +12,8 @@ export const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(false); 
+  const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
+
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     const user = tg.initDataUnsafe?.user?.id; // Получаем ID пользователя
@@ -24,6 +26,7 @@ export const App = () => {
       });
       if(response.data){
         setIsFirstVisit(true)
+        setIsWelcomeModalOpen(true)
         return
       }
       return
@@ -48,6 +51,11 @@ export const App = () => {
     }, 300);
   };
 
+  const closeWelcomeModal = () => {
+    setIsWelcomeModalOpen(false);
+    setIsFirstVisit(false); // Сброс состояния первого визита
+  }
+
   return (
     <Container>
       <Header onOpenModal={openModal} />
@@ -58,13 +66,7 @@ export const App = () => {
       />
       <SearchForm></SearchForm>
       {isSubmitted && <ResultsTable />}
-      {isFirstVisit && (
-        <WelcomeModal isOpen={isModalOpen} onClose={()=>{
-          closeModal()
-          setIsFirstVisit(false)
-          
-        }} />
-      )}
+      {isFirstVisit && <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal}/>}
     </Container>
   );
 };
