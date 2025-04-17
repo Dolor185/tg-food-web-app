@@ -70,6 +70,24 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
     }
   };
 
+  const handlePeriodChange = async (newPeriod) => {
+    try {
+      setPeriod(newPeriod);
+      await axios.post(`${url}/update-period`, {
+        userId: user,
+        period: newPeriod,
+      });
+  
+      const limits = await axios.get(`${url}/limits`, {
+        params: { user },
+      });
+      setMaxValues(limits.data);
+    } catch (error) {
+      console.error("Ошибка при обновлении периода:", error);
+    }
+  };
+  
+
   return (
     <>
       <ModalOverlay $isClosing={isClosing} onClick={onClose} />
@@ -82,22 +100,22 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         <div style={{ marginBottom: "12px" }}>
           <span style={{ marginRight: "8px" }}>Period:</span>
           {[1, 3, 7].map((p) => (
-            <button
-              key={p}
-              onClick={() => setPeriod(p)}
-              style={{
-                marginRight: "6px",
-                padding: "4px 10px",
-                backgroundColor: p === period ? "#3b82f6" : "#ccc",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-              }}
-            >
-              {p} day{p > 1 ? "s" : ""}
-            </button>
-          ))}
+  <button
+    key={p}
+    onClick={() => handlePeriodChange(p)}
+    style={{
+      marginRight: "6px",
+      padding: "4px 10px",
+      backgroundColor: p === period ? "#3b82f6" : "#ccc",
+      color: "#fff",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+    }}
+  >
+    {p} day{p > 1 ? "s" : ""}
+  </button>
+))}
         </div>
 
         {data && <NutrientBars data={data} maxValues={maxValues} />}
