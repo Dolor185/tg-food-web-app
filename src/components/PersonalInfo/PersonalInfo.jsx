@@ -158,7 +158,8 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         </div>
 
         {data && <NutrientBars data={data} maxValues={maxValues} />}
-           <Pie data={pieData} options={pieOptions} />
+     <div style={{ width: "100%", height: "250px" }}>
+        <Pie data={pieData} options={pieOptions} /></div>
 
         {products.length > 0 &&
           products.map((product) => (
