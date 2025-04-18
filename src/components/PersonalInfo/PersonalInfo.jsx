@@ -7,6 +7,12 @@ import {
 } from "./PersonalInfo.styled";
 import axios from "axios";
 import { NutrientBars } from "../NutrientsBars/NutrientsBars";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+
 
 export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   if (!isOpen) return null;
@@ -20,6 +26,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const [originalMaxValues, setOriginalMaxValues] = useState({});
   const [maxValues, setMaxValues] = useState({});
   const [period, setPeriod] = useState(1);
+ 
 
   useEffect(() => {
     if (!isOpen) return;
@@ -37,6 +44,8 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         });
 
         setOriginalMaxValues(limits.data);
+        console.log("Лимиты:", limits.data);
+  
       } catch (error) {
         console.error("Ошибка при получении данных:", error);
       }
@@ -86,6 +95,36 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       console.error("Ошибка при обновлении периода:", error);
     }
   };
+
+  const pieData = {
+    labels: ['Used',' Remaining'],
+    datasets: [
+      {
+        label: "Calories",
+        data: [
+          data?.calories || 0, Math.max(maxValues.dailyCalories - data?.calories, 0)
+        ],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+      },
+    ],
+  };
+
+  const pieOptions = {
+    plugins: {
+      datalabels: {
+        color: "white",
+        font: {
+          weight: "bold",
+        },
+        formatter: (value, ctx) => {
+          const total = ctx.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+          const percentage = ((value / total) * 100).toFixed(1);
+          return `${value} kcal (${percentage}%)`;
+        },
+      },
+    },
+  };
   
 
   return (
@@ -119,6 +158,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         </div>
 
         {data && <NutrientBars data={data} maxValues={maxValues} />}
+           <Pie data={pieData} options={pieOptions} />
 
         {products.length > 0 &&
           products.map((product) => (
