@@ -4,6 +4,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -33,6 +34,10 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
   const submitForm = async (e) => {
     e.preventDefault();
     const amount = parseFloat(value);
+    onClose();
+
+toast.success("Product added successfully");
+
     let factor;
 
     if (selectedServing.number_of_units === "1.000") {

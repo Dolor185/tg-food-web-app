@@ -1,4 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { ProductContext } from "../../context/ProductContext";
 import { Header } from "../Header/Header";
 import { Container } from "./App.styled";
@@ -67,6 +70,8 @@ export const App = () => {
       <SearchForm></SearchForm>
       {isSubmitted && <ResultsTable />}
       {isFirstVisit && <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal}/>}
+      <ToastContainer position="top-center" autoClose={2000} />
     </Container>
+    
   );
 };
