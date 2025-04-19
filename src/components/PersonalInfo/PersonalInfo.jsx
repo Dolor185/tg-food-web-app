@@ -10,6 +10,7 @@ import { NutrientBars } from "../NutrientsBars/NutrientsBars";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import {toast} from 'react-toastify';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -74,6 +75,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.id !== productId)
       );
+      toast.success("Product deleted successfully!");
     } catch (error) {
       console.error("Ошибка при удалении продукта:", error);
     }
