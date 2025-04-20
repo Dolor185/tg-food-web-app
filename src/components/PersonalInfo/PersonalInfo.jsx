@@ -28,6 +28,12 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const [originalMaxValues, setOriginalMaxValues] = useState({});
   const [maxValues, setMaxValues] = useState({});
   const [period, setPeriod] = useState(1);
+  const [cutomizeForm, setCustomizeForm] = useState(false);
+  const [newLimits, setNewLimits] = useState({
+    protein: 0,
+    fat: 0,
+    carbs: 0,
+  });
 
   const getData = useCallback(async () => {
     try {
@@ -128,6 +134,27 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
     },
   };
   
+  const handleCustomLimitsSave = async (e) => {
+    e.preventDefault();
+
+  
+  
+    try {
+      await axios.post(`${url}/update-limits`, {
+        userId: user,
+        nutrients:newLimits,
+
+      });
+  
+      toast.success("Custom limits saved!");
+      setMaxValues(newLimits)
+      setCustomizeForm(false);
+    } catch (error) {
+      console.error("Ошибка при сохранении лимитов:", error);
+      toast.error("Не удалось сохранить лимиты.");
+    }
+  };
+  
 
   return (
     <>
@@ -174,8 +201,47 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
             </Product>
            
           ))}
-           <div>Field for custom limits</div>
+           <button onClick={()=>{
+            setCustomizeForm(true);
            
+           }}>customize limits</button>
+           {cutomizeForm && (<form onSubmit={handleCustomLimitsSave}>
+  <label>
+    Protein (g):
+    <input
+      type="number"
+      name="protein"
+      value={newLimits.protein}
+      onChange={(e) =>
+        setNewLimits({ ...newLimits, protein: parseFloat(e.target.value) || 0 })
+      }
+    />
+  </label>
+  <label>
+    Fat (g):
+    <input
+      type="number"
+      name="fat"
+      value={newLimits.fat}
+      onChange={(e) =>
+        setNewLimits({ ...newLimits, fat: parseFloat(e.target.value) || 0 })
+      }
+    />
+  </label>
+  <label>
+    Carbs (g):
+    <input
+      type="number"
+      name="carbs"
+      value={newLimits.carbs}
+      onChange={(e) =>
+        setNewLimits({ ...newLimits, carbs: parseFloat(e.target.value) || 0 })
+      }
+    />
+  </label>
+  <button type="submit">Save</button>
+</form>
+)}
       </ModalContent>
     </>
   );
