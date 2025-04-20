@@ -172,7 +172,10 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
               </p>
               <button onClick={() => handleDelete(product.id)}>delete</button>
             </Product>
+           
           ))}
+           <div>Field for custom limits</div>
+           
       </ModalContent>
     </>
   );
