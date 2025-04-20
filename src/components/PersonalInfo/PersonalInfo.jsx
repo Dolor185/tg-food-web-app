@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import {
   ModalOverlay,
   ModalContent,
@@ -11,6 +11,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {toast} from 'react-toastify';
+
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -27,30 +28,28 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const [originalMaxValues, setOriginalMaxValues] = useState({});
   const [maxValues, setMaxValues] = useState({});
   const [period, setPeriod] = useState(1);
+
+  const getData = useCallback(async () => {
+    try {
+      const [nutrientsRes, limitsRes] = await Promise.all([
+        axios.get(`${url}/check-nutrients`, { params: { user } }),
+        axios.get(`${url}/limits`, { params: { user } }),
+      ]);
+  
+      setData(nutrientsRes.data[0].totalNutrients);
+      setProducts(nutrientsRes.data[0].products);
+      setOriginalMaxValues(limitsRes.data);
+    } catch (error) {
+      console.error("Ошибка при получении данных:", error);
+      toast.error("Ошибка при получении данных");
+    }
+  }, [url, user]);
  
 
   useEffect(() => {
     if (!isOpen) return;
 
-    const getData = async () => {
-      try {
-        const response = await axios.get(`${url}/check-nutrients`, {
-          params: { user },
-        });
-        setData(response.data[0].totalNutrients);
-        setProducts(response.data[0].products);
 
-        const limits = await axios.get(`${url}/limits`, {
-          params: { user },
-        });
-
-        setOriginalMaxValues(limits.data);
-        console.log("Лимиты:", limits.data);
-  
-      } catch (error) {
-        console.error("Ошибка при получении данных:", error);
-      }
-    };
 
     getData();
   }, [isOpen, user]);
@@ -75,6 +74,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.id !== productId)
       );
+      getData(); // Обновляем данные после удаления продукта
       toast.success("Product deleted successfully!");
     } catch (error) {
       console.error("Ошибка при удалении продукта:", error);
