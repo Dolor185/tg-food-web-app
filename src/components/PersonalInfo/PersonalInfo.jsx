@@ -147,7 +147,15 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       });
   
       toast.success("Custom limits saved!");
-      setMaxValues(newLimits)
+      const dailyCalories = newLimits.protein * 4 + newLimits.fat * 9 + newLimits.carbs * 4;
+      const limits  = {
+        protein: newLimits.protein,
+        carbs: newLimits.carbs,
+        fat: newLimits.fat, 
+        dailyCalories: dailyCalories,
+      };
+setMaxValues(limits);
+
       setCustomizeForm(false);
     } catch (error) {
       console.error("Ошибка при сохранении лимитов:", error);
