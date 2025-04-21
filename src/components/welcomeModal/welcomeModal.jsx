@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { ModalContainer, ModalOverlay, CloseButton, Button, Select, Input, Form } from "./welcomeModal.styled";
+import { ModalContainer, ModalOverlay, CloseButton, Select} from "./welcomeModal.styled";
+import { Input, Form, Button, Label } from "../../styles/FormElements.styled";
 
 
 export const WelcomeModal = ({ isOpen, onClose }) => {
@@ -78,7 +79,7 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
             <h2>Welcome {tg.initDataUnsafe?.user?.username}!</h2>
             <p>Let's see your parameters and goals:</p>
             <Form onSubmit={handleSubmit}>
-              <label>
+              <Label>
                 Weight (kgs):
                 <Input
                   type="number"
@@ -87,8 +88,8 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   required
                 />
-              </label>
-              <label>
+              </Label>
+              <Label>
                 Height (cm):
                 <Input
                   type="number"
@@ -97,8 +98,8 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   required
                 />
-              </label>
-              <label>
+              </Label>
+              <Label>
                 Age:
                 <Input
                   type="number"
@@ -107,15 +108,15 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   required
                 />
-              </label>
-              <label>
+              </Label>
+              <Label>
                 Sex
                 <Select name="gender" value={formData.gender} onChange={handleChange}>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </Select>
-              </label>
-              <label>
+              </Label>
+              <Label>
                 Activity
                 <Select
                   name="activityLevel"
@@ -128,15 +129,15 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                   <option value="active">Active</option>
                   <option value="very_active">Very active</option>
                 </Select>
-              </label>
-              <label>
+              </Label>
+              <Label>
                 Goal
                 <Select name="goal" value={formData.goal} onChange={handleChange}>
                   <option value="maintain">Maintain</option>
                   <option value="lose">Lose</option>
                   <option value="gain">Gain</option>
                 </Select>
-              </label>
+              </Label>
               <Button type="submit">Submit</Button>
             </Form>
           </>
@@ -151,9 +152,9 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
             {proteinCoef !== null && fatCoef !== null && (
               <>
                 <div>
-                  <label>
+                  <Label>
                     Белок (г/кг): 
-                    <input 
+                    <Input 
                       type="range" 
                       min="1.0" 
                       max="3.0" 
@@ -162,13 +163,13 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                       onChange={(e) => setProteinCoef(e.target.value)} 
                     />
                     {proteinCoef} г/кг
-                  </label>
+                  </Label>
                 </div>
 
                 <div>
-                  <label>
+                  <Label>
                     Жир (г/кг): 
-                    <input 
+                    <Input 
                       type="range" 
                       min="0.5" 
                       max="2.0" 
@@ -177,7 +178,7 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                       onChange={(e) => setFatCoef(e.target.value)} 
                     />
                     {fatCoef} г/кг
-                  </label>
+                  </Label>
                 </div>
 
                 <Button type="button" onClick={handleRecalculate}>Пересчитать</Button>

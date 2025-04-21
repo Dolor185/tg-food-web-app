@@ -5,6 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import axios from "axios";
 import { toast } from "react-toastify";
+import {Label, Input, Button, Form} from '../../styles/FormElements.styled'
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -115,19 +116,19 @@ toast.success("Product added successfully");
         <ModalContent $isClosing={isClosing}>
           <CloseButton onClick={onClose}>×</CloseButton>
           <h2>{product.food_name}</h2>
-          <form onSubmit={submitForm}>
-            <label>
+          <Form onSubmit={submitForm}>
+            <Label>
               Weight
-              <input
+              <Input
                 onChange={handleChange}
                 type="text"
                 title="Field may contain only latin letters"
                 value={value}
               />
-            </label>
-            <button type="submit">Add</button>
-          </form>
-          <label>
+            </Label>
+            <Button type="submit">Add</Button>
+          </Form>
+          <Label>
             Select Serving:
             <select
               onChange={handleServingChange}
@@ -139,7 +140,7 @@ toast.success("Product added successfully");
                 </option>
               ))}
             </select>
-          </label>
+          </Label>
           <p>
             Nutrients per {selectedServing.metric_serving_amount}{" "}
             {selectedServing.metric_serving_unit}:

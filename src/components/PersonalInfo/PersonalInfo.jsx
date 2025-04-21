@@ -11,6 +11,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {toast} from 'react-toastify';
+import {Label, Input, Form, Button} from '../../styles/FormElements.styled'
 
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -162,6 +163,32 @@ setMaxValues(limits);
       toast.error("Не удалось сохранить лимиты.");
     }
   };
+
+  const handleRestoreDefaults = async () => {
+    try {
+      const response = await axios.post(`${url}/restore-nutrients`, {
+        userId: user,
+      });
+  
+      const { protein, fat, carbs } = response.data.nutrients;
+      const dailyCalories = protein * 4 + fat * 9 + carbs * 4;
+  
+      const restored = {
+        protein,
+        fat,
+        carbs,
+        dailyCalories,
+      };
+  
+      setMaxValues(restored);
+      setNewLimits({ protein, fat, carbs });
+      toast.success("Рекомендованные значения восстановлены!");
+    } catch (error) {
+      console.error("Ошибка при восстановлении:", error);
+      toast.error("Не удалось восстановить значения.");
+    }
+  };
+  
   
 
   return (
@@ -176,7 +203,7 @@ setMaxValues(limits);
         <div style={{ marginBottom: "12px" }}>
           <span style={{ marginRight: "8px" }}>Period:</span>
           {[1, 3, 7].map((p) => (
-  <button
+  <Button
     key={p}
     onClick={() => handlePeriodChange(p)}
     style={{
@@ -190,7 +217,7 @@ setMaxValues(limits);
     }}
   >
     {p} day{p > 1 ? "s" : ""}
-  </button>
+  </Button>
 ))}
         </div>
 
@@ -205,18 +232,21 @@ setMaxValues(limits);
               <p>
                 {product.amount} ({product.metric_serving_unit})
               </p>
-              <button onClick={() => handleDelete(product.id)}>delete</button>
+              <Button onClick={() => handleDelete(product.id)}>delete</Button>
             </Product>
            
           ))}
-           <button onClick={()=>{
+           <Button onClick={()=>{
             setCustomizeForm(true);
            
-           }}>customize limits</button>
-           {cutomizeForm && (<form onSubmit={handleCustomLimitsSave}>
-  <label>
+           }}>customize limits</Button>
+           <Button onClick={handleRestoreDefaults} style={{ marginTop: "10px" }}>
+  Вернуть рекомендованные значения
+</Button>
+           {cutomizeForm && (<Form onSubmit={handleCustomLimitsSave}>
+  <Label>
     Protein (g):
-    <input
+    <Input
       type="number"
       name="protein"
       value={newLimits.protein}
@@ -224,10 +254,10 @@ setMaxValues(limits);
         setNewLimits({ ...newLimits, protein: parseFloat(e.target.value) || 0 })
       }
     />
-  </label>
-  <label>
+  </Label>
+  <Label>
     Fat (g):
-    <input
+    <Input
       type="number"
       name="fat"
       value={newLimits.fat}
@@ -235,10 +265,10 @@ setMaxValues(limits);
         setNewLimits({ ...newLimits, fat: parseFloat(e.target.value) || 0 })
       }
     />
-  </label>
-  <label>
+  </Label>
+  <Label>
     Carbs (g):
-    <input
+    <Input
       type="number"
       name="carbs"
       value={newLimits.carbs}
@@ -246,9 +276,9 @@ setMaxValues(limits);
         setNewLimits({ ...newLimits, carbs: parseFloat(e.target.value) || 0 })
       }
     />
-  </label>
-  <button type="submit">Save</button>
-</form>
+  </Label>
+  <Button type="submit">Save</Button>
+</Form>
 )}
       </ModalContent>
     </>
