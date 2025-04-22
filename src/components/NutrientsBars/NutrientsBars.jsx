@@ -7,8 +7,9 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 ChartJS.register(
   CategoryScale,
@@ -16,19 +17,29 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartDataLabels
 );
 
+const getColor = (variable, fallback) =>
+  getComputedStyle(document.documentElement).getPropertyValue(variable) || fallback;
+
 const NutrientBar = ({ label, value, max, color }) => {
+  const textColor = getColor('--tg-theme-text-color', '#111');
+  const bgColor = getColor('--tg-theme-bg-color', '#fff');
+
   const data = {
     labels: [label],
     datasets: [
       {
         label,
         data: [parseFloat(value.toFixed(1))],
-        backgroundColor: [color],
-        borderRadius: 10,
-        barThickness: 25,
+        backgroundColor: `rgba(${hexToRgb(color)}, 0.7)`,
+        borderColor: color,
+        borderWidth: 1,
+        borderRadius: 12,
+        barThickness: 28,
+        borderSkipped: false,
       },
     ],
   };
@@ -38,48 +49,51 @@ const NutrientBar = ({ label, value, max, color }) => {
     responsive: true,
     maintainAspectRatio: false,
     animation: {
-      duration: 800,
-      easing: 'easeOutQuart',
+      duration: 1000,
+      easing: "easeOutCubic",
     },
     scales: {
       x: {
         max,
         beginAtZero: true,
-   ticks: {
-  callback: function(value) {
-    return value === 0 || value === max ? value : '';
-  },
-  
-  background: 'var(--tg-theme-bg-color)',
-  color: 'var(--tg-theme-text-color)',
-  font: {
-    size: 14,
-  },
-},
-        grid: {
-          display: false,
+        ticks: {
+          callback: function (value) {
+            return value === 0 || value === max ? value : '';
+          },
+          color: textColor,
+          font: { size: 14 },
         },
+        grid: { display: false },
       },
       y: {
         ticks: {
-          background: 'var(--tg-theme-bg-color)',
-  color: 'var(--tg-theme-text-color)',
-          font: {
-            size: 14,
-          },
+          color: textColor,
+          font: { size: 14 },
         },
-        grid: {
-          display: false,
-        },
+        grid: { display: false },
       },
     },
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
       tooltip: {
+        backgroundColor: bgColor,
+        titleColor: textColor,
+        bodyColor: textColor,
         callbacks: {
-          label: (context) => `${context.parsed.x} г`,
+          label: (context) => {
+            const value = context.parsed.x;
+            const percent = ((value / max) * 100).toFixed(0);
+            return `${value} г (${percent}%)`;
+          },
+        },
+      },
+      datalabels: {
+        color: textColor,
+        anchor: 'end',
+        align: 'right',
+        formatter: (val) => `${val} г`,
+        font: {
+          weight: 'bold',
         },
       },
     },
@@ -92,6 +106,16 @@ const NutrientBar = ({ label, value, max, color }) => {
   );
 };
 
+// HEX ➜ RGB для rgba()
+const hexToRgb = (hex) => {
+  hex = hex.replace("#", "");
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `${r},${g},${b}`;
+};
+
 export const NutrientBars = ({ data, maxValues }) => {
   return (
     <div className="space-y-4">
@@ -99,19 +123,19 @@ export const NutrientBars = ({ data, maxValues }) => {
         label="Carbs"
         value={data.carbs}
         max={maxValues.carbs}
-        color="#FF6384"
+        color="#4fc3f7"
       />
       <NutrientBar
         label="Fat"
         value={data.fat}
         max={maxValues.fat}
-        color="#36A2EB"
+        color="#ffb74d"
       />
       <NutrientBar
         label="Protein"
         value={data.protein}
         max={maxValues.protein}
-        color="#FFCE56"
+        color="#81c784"
       />
     </div>
   );

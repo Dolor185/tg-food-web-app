@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   ModalOverlay,
   ModalContent,
@@ -10,18 +10,19 @@ import { NutrientBars } from "../NutrientsBars/NutrientsBars";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import {toast} from 'react-toastify';
-import {Label, Input, Form, Button} from '../../styles/FormElements.styled'
-
+import { toast } from "react-toastify";
+import { Button } from "../../styles/FormElements.styled";
+import { History } from "../History/History";
+import { PeriodPicker } from "./PeriodPicker";
+import { CustomLimits } from "./CustomLimits";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-
 export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   if (!isOpen) return null;
+
   const tg = window.Telegram.WebApp;
   const user = tg.initDataUnsafe?.user?.id;
-
   const url = process.env.REACT_APP_URL;
 
   const [data, setData] = useState(null);
@@ -29,12 +30,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const [originalMaxValues, setOriginalMaxValues] = useState({});
   const [maxValues, setMaxValues] = useState({});
   const [period, setPeriod] = useState(1);
-  const [cutomizeForm, setCustomizeForm] = useState(false);
-  const [newLimits, setNewLimits] = useState({
-    protein: 0,
-    fat: 0,
-    carbs: 0,
-  });
+  const [modalView, setModalView] = useState("main");
 
   const getData = useCallback(async () => {
     try {
@@ -42,7 +38,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         axios.get(`${url}/check-nutrients`, { params: { user } }),
         axios.get(`${url}/limits`, { params: { user } }),
       ]);
-  
+
       setData(nutrientsRes.data[0].totalNutrients);
       setProducts(nutrientsRes.data[0].products);
       setOriginalMaxValues(limitsRes.data);
@@ -51,18 +47,13 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       toast.error("Ошибка при получении данных");
     }
   }, [url, user]);
- 
 
   useEffect(() => {
     if (!isOpen) return;
-
-
-
     getData();
   }, [isOpen, user]);
 
   useEffect(() => {
-    // Пересчёт лимитов под период
     const scaled = {
       protein: (originalMaxValues.protein || 0) * period,
       fat: (originalMaxValues.fat || 0) * period,
@@ -78,13 +69,13 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         params: { productId, user },
       });
 
-      setProducts((prevProducts) =>
-        prevProducts.filter((product) => product.id !== productId)
+      setProducts((prev) =>
+        prev.filter((product) => product.id !== productId)
       );
-      getData(); // Обновляем данные после удаления продукта
-      toast.success("Product deleted successfully!");
+      getData();
+      toast.success("Продукт удалён");
     } catch (error) {
-      console.error("Ошибка при удалении продукта:", error);
+      console.error("Ошибка при удалении:", error);
     }
   };
 
@@ -95,72 +86,13 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         userId: user,
         period: newPeriod,
       });
-  
-      const limits = await axios.get(`${url}/limits`, {
-        params: { user },
-      });
+
+      const limits = await axios.get(`${url}/limits`, { params: { user } });
       setMaxValues(limits.data);
+      setModalView("main");
+      toast.success("Период обновлён");
     } catch (error) {
       console.error("Ошибка при обновлении периода:", error);
-    }
-  };
-
-  const pieData = {
-    labels: ['Used',' Remaining'],
-    datasets: [
-      {
-        label: "Calories",
-        data: [
-          data?.calories || 0, Math.max(maxValues.dailyCalories - data?.calories, 0)
-        ],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-      },
-    ],
-  };
-
-  const pieOptions = {
-    plugins: {
-      datalabels: {
-        color: "white",
-        font: {
-          weight: "bold",
-        },
-        formatter: (value, ctx) => {
-          const total = ctx.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
-          const percentage = ((value / total) * 100).toFixed(1);
-          return `${value} kcal (${percentage}%)`;
-        },
-      },
-    },
-  };
-  
-  const handleCustomLimitsSave = async (e) => {
-    e.preventDefault();
-
-  
-  
-    try {
-      await axios.post(`${url}/update-limits`, {
-        userId: user,
-        nutrients:newLimits,
-
-      });
-  
-      toast.success("Custom limits saved!");
-      const dailyCalories = newLimits.protein * 4 + newLimits.fat * 9 + newLimits.carbs * 4;
-      const limits  = {
-        protein: newLimits.protein,
-        carbs: newLimits.carbs,
-        fat: newLimits.fat, 
-        dailyCalories: dailyCalories,
-      };
-setMaxValues(limits);
-
-      setCustomizeForm(false);
-    } catch (error) {
-      console.error("Ошибка при сохранении лимитов:", error);
-      toast.error("Не удалось сохранить лимиты.");
     }
   };
 
@@ -169,117 +101,101 @@ setMaxValues(limits);
       const response = await axios.post(`${url}/restore-nutrients`, {
         userId: user,
       });
-  
+
       const { protein, fat, carbs } = response.data.nutrients;
       const dailyCalories = protein * 4 + fat * 9 + carbs * 4;
-  
-      const restored = {
-        protein,
-        fat,
-        carbs,
-        dailyCalories,
-      };
-  
+
+      const restored = { protein, fat, carbs, dailyCalories };
       setMaxValues(restored);
-      setNewLimits({ protein, fat, carbs });
-      toast.success("Рекомендованные значения восстановлены!");
+      toast.success("Рекомендованные значения восстановлены");
     } catch (error) {
       console.error("Ошибка при восстановлении:", error);
       toast.error("Не удалось восстановить значения.");
     }
   };
-  
-  
+
+  const pieData = {
+    labels: ["Использовано", "Осталось"],
+    datasets: [
+      {
+        label: "Калории",
+        data: [
+          data?.calories || 0,
+          Math.max(maxValues.dailyCalories - data?.calories, 0),
+        ],
+        backgroundColor: ["#FF6384", "#36A2EB"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB"],
+      },
+    ],
+  };
+
+  const pieOptions = {
+    plugins: {
+      datalabels: {
+        color: "white",
+        font: { weight: "bold" },
+        formatter: (value, ctx) => {
+          const total = ctx.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+          const percentage = ((value / total) * 100).toFixed(1);
+          return `${value} ккал (${percentage}%)`;
+        },
+      },
+    },
+  };
+
+  const renderContent = () => {
+    switch (modalView) {
+      case "customLimits":
+        return (
+          <CustomLimits
+            setMaxValues={setMaxValues}
+            onBack={() => setModalView("main")}
+          />
+        );
+      case "period":
+        return (
+          <PeriodPicker handlePeriodChange={handlePeriodChange} />
+        );
+      default:
+        return (
+          <>
+            <CloseButton onClick={onClose}>×</CloseButton>
+            <h2>{tg.initDataUnsafe?.user?.username}'s info</h2>
+            <p>Here is your nutrient limits and list of products</p>
+
+            <Button onClick={() => setModalView("period")}>Выбрать период</Button>
+            <Button onClick={() => setModalView("customLimits")}>Кастомизировать БЖУ</Button>
+
+            {data && <NutrientBars data={data} maxValues={maxValues} />}
+
+            <div style={{ width: "100%", height: "250px" }}>
+              <Pie data={pieData} options={pieOptions} />
+            </div>
+
+            {products.length > 0 &&
+              products.map((product) => (
+                <Product key={product.id}>
+                  <p>{product.name}</p>
+                  <p>{product.amount} ({product.metric_serving_unit})</p>
+                  <Button onClick={() => handleDelete(product.id)}>Удалить</Button>
+                </Product>
+              ))}
+
+            <Button onClick={handleRestoreDefaults} style={{ marginTop: "10px" }}>
+              Вернуть рекомендованные значения
+            </Button>
+
+            <History userId={user} />
+          </>
+        );
+    }
+  };
 
   return (
     <>
       <ModalOverlay $isClosing={isClosing} onClick={onClose} />
       <ModalContent $isClosing={isClosing}>
-        <CloseButton onClick={onClose}>×</CloseButton>
-        <h2>{tg.initDataUnsafe?.user?.username}'s info</h2>
-        <p>Here is your nutrient limits and list of products</p>
-
-        {/* Выбор периода */}
-        <div style={{ marginBottom: "12px" }}>
-          <span style={{ marginRight: "8px" }}>Period:</span>
-          {[1, 3, 7].map((p) => (
-  <Button
-    key={p}
-    onClick={() => handlePeriodChange(p)}
-    style={{
-      marginRight: "6px",
-      padding: "4px 10px",
-      backgroundColor: p === period ? "#3b82f6" : "#ccc",
-      color: "#fff",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-    }}
-  >
-    {p} day{p > 1 ? "s" : ""}
-  </Button>
-))}
-        </div>
-
-        {data && <NutrientBars data={data} maxValues={maxValues} />}
-     <div style={{ width: "100%", height: "250px" }}>
-        <Pie data={pieData} options={pieOptions} /></div>
-
-        {products.length > 0 &&
-          products.map((product) => (
-            <Product key={product.id}>
-              <p>{product.name}</p>
-              <p>
-                {product.amount} ({product.metric_serving_unit})
-              </p>
-              <Button onClick={() => handleDelete(product.id)}>delete</Button>
-            </Product>
-           
-          ))}
-           <Button onClick={()=>{
-            setCustomizeForm(true);
-           
-           }}>customize limits</Button>
-           <Button onClick={handleRestoreDefaults} style={{ marginTop: "10px" }}>
-  Вернуть рекомендованные значения
-</Button>
-           {cutomizeForm && (<Form onSubmit={handleCustomLimitsSave}>
-  <Label>
-    Protein (g):
-    <Input
-      type="number"
-      name="protein"
-      value={newLimits.protein}
-      onChange={(e) =>
-        setNewLimits({ ...newLimits, protein: parseFloat(e.target.value) || 0 })
-      }
-    />
-  </Label>
-  <Label>
-    Fat (g):
-    <Input
-      type="number"
-      name="fat"
-      value={newLimits.fat}
-      onChange={(e) =>
-        setNewLimits({ ...newLimits, fat: parseFloat(e.target.value) || 0 })
-      }
-    />
-  </Label>
-  <Label>
-    Carbs (g):
-    <Input
-      type="number"
-      name="carbs"
-      value={newLimits.carbs}
-      onChange={(e) =>
-        setNewLimits({ ...newLimits, carbs: parseFloat(e.target.value) || 0 })
-      }
-    />
-  </Label>
-  <Button type="submit">Save</Button>
-</Form>
-)}
+        {renderContent()}
       </ModalContent>
     </>
   );

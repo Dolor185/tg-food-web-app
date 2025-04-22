@@ -13,6 +13,7 @@ import { BarcodeScanner } from "../BarcodeScanner/BarcodeScanner";
 import { barcodeScan } from "../../hooks/barcodeScan";
 import { getFoodById } from "../../hooks/getFoodById";
 
+
 export const SearchForm = () => {
   const { setProduct, setIsSubmitted } = useContext(ProductContext);
   const [localProduct, setLocalProduct] = useState("");
