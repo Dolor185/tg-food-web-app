@@ -15,7 +15,8 @@ import { Button } from "../../styles/FormElements.styled";
 import { History } from "../History/History";
 import { PeriodPicker } from "./PeriodPicker";
 import { CustomLimits } from "./CustomLimits";
-import { CustomProductForm } from "./CustomProductForm";
+import { CustomProductForm } from "./CustomProduct/CustomProductForm";
+import { CustomProductsList } from "./CustomProduct/CustomProductsList";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -159,9 +160,9 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         );
         case "history":
           return <History userId={user} onBack={() => setModalView("main")}/>;
-          case  "customProduct":
+          case  "customProducts":
             return (
-              <CustomProductForm
+              <CustomProductsList
                 userId={user}
                 onBack={() => setModalView("main")}
               />
@@ -176,8 +177,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
             <Button onClick={() => setModalView("period")}>Выбрать период</Button>
             <Button onClick={() => setModalView("customLimits")}>Кастомизировать БЖУ</Button>
             <Button onClick={() => setModalView("history")}>История</Button>
-            <Button onClick={() => setModalView("customProduct")}>Добавить продукт</Button></ButtonsRow>
-
+            <Button onClick={() => setModalView("customProducts")}>My products</Button></ButtonsRow>
             {data && <NutrientBars data={data} maxValues={maxValues} />}
 
             <ChartWrapper style={{ width: "100%", height: "250px" }}>

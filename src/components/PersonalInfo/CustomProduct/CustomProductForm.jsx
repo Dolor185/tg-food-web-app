@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";  
 import { toast } from "react-toastify";
-import { Label, Input,Form, Button } from "../../styles/FormElements.styled";
+import { Label, Input,Form, Button } from "../../../styles/FormElements.styled";
 export const CustomProductForm = ({ onBack}) => {
   const [product, setProduct] = useState({
     name: "",
