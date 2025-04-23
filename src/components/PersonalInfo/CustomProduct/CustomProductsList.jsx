@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CustomProductForm } from './CustomProductForm';
 
+import {ActionButton,List,ButtonRow,ListItem,Title,Container} from '../PersonalInfo.styled'
+
 export const CustomProductsList = ({userId,onBack}) => {
 
   const url = process.env.REACT_APP_URL;
@@ -41,16 +43,16 @@ export const CustomProductsList = ({userId,onBack}) => {
   };
 
   return (
-    <div>
-      <h2>Мои кастомные продукты</h2>
-      <ul>
+    <Container>
+      <Title>Мои кастомные продукты</Title>
+      <List>
         {products.map((product) => (
-          <li key={product._id}>
+          <ListItem key={product._id}>
             {product.name} — {product.protein}г белка, {product.fat}г жира, {product.carbs}г углеводов
-            <button onClick={() => handleDelete(product._id)}>Удалить</button>
-          </li>
+            <ActionButton onClick={() => handleDelete(product._id)}>Удалить</ActionButton>
+          </ListItem>
         ))}
-      </ul>
+      </List>
       {isAdding && (
   <CustomProductForm
     userId={userId}
@@ -60,10 +62,12 @@ export const CustomProductsList = ({userId,onBack}) => {
     }}
   />
 )}
-      <button onClick={() => setIsAdding(!isAdding)}>
+<ButtonRow>
+      <ActionButton onClick={() => setIsAdding(!isAdding)}>
         {isAdding ? "Отмена" : "Добавить продукт"}
-      </button>
-      <button onClick={onBack}>Назад</button>
-    </div>
+      </ActionButton>
+      <ActionButton onClick={onBack}>Назад</ActionButton>
+      </ButtonRow>
+    </Container>
   );
 };

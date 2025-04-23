@@ -112,3 +112,56 @@ export const Subtitle = styled.p`
   font-size: 14px;
   margin-bottom: 16px;
 `;
+
+
+export const Container = styled.div`
+  padding: 16px;
+`;
+
+
+
+export const List = styled.ul`
+  padding: 0;
+  list-style: none;
+  margin: 0;
+`;
+
+export const ListItem = styled.li`
+  background: var(--tg-theme-secondary-bg-color, #f2f2f2);
+  color: var(--tg-theme-text-color, #000);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+
+export const ButtonRow = styled.div`
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
+
+export const ActionButton = styled.button`
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #40a7e3;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #2e90d1;
+  }
+
+  &:active {
+    background-color: #1f78b2;
+  }
+`;
