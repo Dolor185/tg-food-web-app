@@ -15,7 +15,6 @@ import { Button } from "../../styles/FormElements.styled";
 import { History } from "../History/History";
 import { PeriodPicker } from "./PeriodPicker";
 import { CustomLimits } from "./CustomLimits";
-import { CustomProductForm } from "./CustomProduct/CustomProductForm";
 import { CustomProductsList } from "./CustomProduct/CustomProductsList";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);

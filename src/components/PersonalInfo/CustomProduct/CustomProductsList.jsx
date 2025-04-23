@@ -1,34 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { CustomProductForm } from './CustomProductForm';
 
-export const CustomProductsList = () => {
-  const tg = window.Telegram.WebApp;
-  const user = tg.initDataUnsafe?.user?.id;
+export const CustomProductsList = ({userId,onBack}) => {
+
   const url = process.env.REACT_APP_URL;
 
   const [products, setProducts] = useState([]);
+  const [isAdding, setIsAdding] = useState(false);
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${url}/custom-products`, {
+        params: { userId: userId },
+      });
+      setProducts(response.data.products);
+    } catch (error) {
+      console.error("Error fetching custom products:", error);
+      toast.error("Failed to fetch custom products");
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`${url}/custom-products`, {
-          params: { userId: user },
-        });
-        setProducts(response.data.products);
-      } catch (error) {
-        console.error("Error fetching custom products:", error);
-        toast.error("Failed to fetch custom products");
-      }
-    };
+    
 
     fetchProducts();
-  }, [user]);
+  }, [userId]);
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${url}/delete-custom`, {
-        data: { userId: user, productId: id },
+        data: { userId: userId, productId: id },
       });
       setProducts(prev => prev.filter(p => p._id !== id));
       toast.success("Product deleted!");
@@ -49,6 +51,19 @@ export const CustomProductsList = () => {
           </li>
         ))}
       </ul>
+      {isAdding && (
+  <CustomProductForm
+    userId={userId}
+    onSuccess={() => {
+      setIsAdding(false);
+      fetchProducts(); // обновить после добавления
+    }}
+  />
+)}
+      <button onClick={() => setIsAdding(!isAdding)}>
+        {isAdding ? "Отмена" : "Добавить продукт"}
+      </button>
+      <button onClick={onBack}>Назад</button>
     </div>
   );
 };
