@@ -59,21 +59,56 @@ background: var(--tg-theme-bg-color);
 
   }
 `;
-
 export const CloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  cursor: pointer;
-  background: none;
-  color: var(--tg-theme-text-color);
+  background: transparent;
   border: none;
-  font-size: 1.5rem;
-  &:hover {
-    color: #40a7e3;
-  }
+  font-size: 22px;
+  color: var(--tg-theme-text-color, #000);
+  cursor: pointer;
+  hover:{
+  color: var(--tg-theme-button-color, #007bff);}
 `;
 
 export const Product = styled.div`
+  background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 12px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+`;
+
+export const ProductInfo = styled.div`
+  flex: 1;
+  margin-right: 10px;
+`;
+
+export const ButtonsRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+`;
+
+export const ChartWrapper = styled.div`
+  margin: 20px auto;
+  max-width: 300px;
+`;
+
+export const Title = styled.h2`
+  font-size: 20px;
+  margin-bottom: 4px;
+  font-weight: 600;
+`;
+
+export const Subtitle = styled.p`
+  color: var(--tg-theme-hint-color, #777);
+  font-size: 14px;
+  margin-bottom: 16px;
 `;

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { ModalOverlay, ModalContent, CloseButton } from "./Modal.styled";
+import { ModalOverlay, ModalContent, CloseButton, Row, Section, ChartWrapper, StyledSelect } from "./Modal.styled";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {Label, Input, Button, Form} from '../../styles/FormElements.styled'
+import {Input, Button, Form} from '../../styles/FormElements.styled'
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -111,47 +111,44 @@ toast.success("Product added successfully");
   };
 
   return (
-    <>
-      <ModalOverlay $isClosing={isClosing}>
-        <ModalContent $isClosing={isClosing}>
-          <CloseButton onClick={onClose}>×</CloseButton>
-          <h2>{product.food_name}</h2>
-          <Form onSubmit={submitForm}>
-            <Label>
-              Weight
-              <Input
-                onChange={handleChange}
-                type="text"
-                title="Field may contain only latin letters"
-                value={value}
-              />
-            </Label>
-            <Button type="submit">Add</Button>
-          </Form>
-          <Label>
-            Select Serving:
-            <select
-              onChange={handleServingChange}
-              value={selectedServing.serving_id}
-            >
+    <ModalOverlay $isClosing={isClosing}>
+      <ModalContent $isClosing={isClosing}>
+        <CloseButton onClick={onClose}>×</CloseButton>
+
+        <h2>{product.food_name}</h2>
+
+        <Form onSubmit={submitForm}>
+          <Row>
+            <Input
+              type="text"
+              placeholder="Вес"
+              value={value}
+              onChange={handleChange}
+              required
+            />
+            <StyledSelect onChange={handleServingChange} value={selectedServing.serving_id}>
               {product.servings.serving.map((serving) => (
                 <option key={serving.serving_id} value={serving.serving_id}>
                   {serving.serving_description}
                 </option>
               ))}
-            </select>
-          </Label>
-          <p>
-            Nutrients per {selectedServing.metric_serving_amount}{" "}
-            {selectedServing.metric_serving_unit}:
-          </p>
-          <p>Calories: {selectedServing.calories} kcal</p>
-          <p>Protein: {selectedServing.protein} g</p>
-          <p>Fat: {selectedServing.fat} g</p>
-          <p>Carbs: {selectedServing.carbohydrate} g</p>
+            </StyledSelect>
+          </Row>
+          <Button type="submit">Добавить</Button>
+        </Form>
+
+        <Section>
+          <p>Нутриенты на {selectedServing.metric_serving_amount} {selectedServing.metric_serving_unit}:</p>
+          <p>Калории: {selectedServing.calories} ккал</p>
+          <p>Белки: {selectedServing.protein} г</p>
+          <p>Жиры: {selectedServing.fat} г</p>
+          <p>Углеводы: {selectedServing.carbohydrate} г</p>
+        </Section>
+
+        <ChartWrapper>
           <Pie data={data} options={options} />
-        </ModalContent>
-      </ModalOverlay>
-    </>
+        </ChartWrapper>
+      </ModalContent>
+    </ModalOverlay>
   );
 };

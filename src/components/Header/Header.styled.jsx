@@ -24,3 +24,13 @@ export const Button = styled.button`
     padding: 8px 12px;
   }
 `;
+
+export const HeaderDiv = styled.div`
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
+  font-weight: 600;
+`;

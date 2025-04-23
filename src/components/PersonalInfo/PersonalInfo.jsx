@@ -3,7 +3,7 @@ import {
   ModalOverlay,
   ModalContent,
   CloseButton,
-  Product,
+  Product, ProductInfo,ButtonsRow, ChartWrapper, Title, Subtitle
 } from "./PersonalInfo.styled";
 import axios from "axios";
 import { NutrientBars } from "../NutrientsBars/NutrientsBars";
@@ -15,6 +15,7 @@ import { Button } from "../../styles/FormElements.styled";
 import { History } from "../History/History";
 import { PeriodPicker } from "./PeriodPicker";
 import { CustomLimits } from "./CustomLimits";
+import { CustomProductForm } from "./CustomProductForm";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -156,27 +157,40 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         return (
           <PeriodPicker handlePeriodChange={handlePeriodChange} />
         );
+        case "history":
+          return <History userId={user} onBack={() => setModalView("main")}/>;
+          case  "customProduct":
+            return (
+              <CustomProductForm
+                userId={user}
+                onBack={() => setModalView("main")}
+              />
+            );
       default:
         return (
           <>
             <CloseButton onClick={onClose}>×</CloseButton>
-            <h2>{tg.initDataUnsafe?.user?.username}'s info</h2>
-            <p>Here is your nutrient limits and list of products</p>
-
+            <Title>{tg.initDataUnsafe?.user?.username}'s info</Title>
+            <Subtitle>Here is your nutrient limits and list of products</Subtitle>
+<ButtonsRow>
             <Button onClick={() => setModalView("period")}>Выбрать период</Button>
             <Button onClick={() => setModalView("customLimits")}>Кастомизировать БЖУ</Button>
+            <Button onClick={() => setModalView("history")}>История</Button>
+            <Button onClick={() => setModalView("customProduct")}>Добавить продукт</Button></ButtonsRow>
 
             {data && <NutrientBars data={data} maxValues={maxValues} />}
 
-            <div style={{ width: "100%", height: "250px" }}>
+            <ChartWrapper style={{ width: "100%", height: "250px" }}>
               <Pie data={pieData} options={pieOptions} />
-            </div>
+            </ChartWrapper>
 
             {products.length > 0 &&
               products.map((product) => (
                 <Product key={product.id}>
+                  <ProductInfo>
                   <p>{product.name}</p>
                   <p>{product.amount} ({product.metric_serving_unit})</p>
+                  </ProductInfo>
                   <Button onClick={() => handleDelete(product.id)}>Удалить</Button>
                 </Product>
               ))}
@@ -185,7 +199,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
               Вернуть рекомендованные значения
             </Button>
 
-            <History userId={user} />
+
           </>
         );
     }
