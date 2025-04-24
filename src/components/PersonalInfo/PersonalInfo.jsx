@@ -64,14 +64,14 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
     setMaxValues(scaled);
   }, [period, originalMaxValues]);
 
-  const handleDelete = async (productId) => {
+  const handleDelete = async (entryId) => {
     try {
       await axios.get(`${url}/delete-product`, {
-        params: { productId, user },
+        params: { entryId, user },
       });
 
       setProducts((prev) =>
-        prev.filter((product) => product.id !== productId)
+        prev.filter((product) => product.entryId !== entryId)
       );
       getData();
       toast.success("Продукт удалён");
@@ -185,12 +185,12 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
 
             {products.length > 0 &&
               products.map((product) => (
-                <Product key={product.id}>
+                <Product key={product.entryId}>
                   <ProductInfo>
                   <p>{product.name}</p>
                   <p>{product.amount} ({product.metric_serving_unit})</p>
                   </ProductInfo>
-                  <Button onClick={() => handleDelete(product.id)}>Удалить</Button>
+                  <Button onClick={() => handleDelete(product.entryId)}>Удалить</Button>
                 </Product>
               ))}
 

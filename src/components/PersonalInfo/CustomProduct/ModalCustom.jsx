@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-
-
+import {Form,Label,Input,Button} from "../../../styles/FormElements.styled";
 import { ModalOverlay, ModalContent, CloseButton} from "../../../styles/Modal.styled";
 
 export const  ModalCustom = ({onClose, product, userId}) =>{
@@ -23,6 +22,8 @@ export const  ModalCustom = ({onClose, product, userId}) =>{
 toast.success("Product added successfully");
 
 const factor = amount/100
+const entryId = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+
 
 const nutrients = {
     calories: calories * factor,
@@ -32,6 +33,7 @@ const nutrients = {
   };
 
   const productPayload = {
+    entryId: entryId,
     id: parseFloat(product._id),
     name: product.name,
     amount: amount,
@@ -66,23 +68,23 @@ const nutrients = {
         <ModalOverlay>
             <ModalContent>
             <h2>{product.name}</h2>
-            <form onSubmit={handleSubmit}> 
-<label>
+            <Form onSubmit={handleSubmit}> 
+<Label>
     Wieght
-    <input 
+    <Input 
     type="number"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         min="0"
     />
-</label>
-<button type="submit">Add</button>
-            </form>
+</Label>
+<Button type="submit">Add</Button>
+            </Form>
             <p>Калории: {calories} kcal</p>
             <p>Белки: {product.protein}g</p>
             <p>Жиры: {product.fat}g</p>
             <p>Углеводы: {product.carbs}g</p>
-            <CloseButton onClick={onClose}>X</CloseButton>
+            <CloseButton onClick={onClose}>x</CloseButton>
         </ModalContent>
         </ModalOverlay>
     );

@@ -61,7 +61,7 @@ export const CustomProductsList = ({userId,onBack}) => {
         {products.map((product) => (
           <ListItem key={product._id} onClick={handleClick(product)}>
             {product.name} — {product.protein}г белка, {product.fat}г жира, {product.carbs}г углеводов
-            <ActionButton onClick={() => handleDelete(product._id)}>Удалить</ActionButton>
+            <ActionButton onClick={(e) =>  { e.stopPropagation(); handleDelete(product._id)}}>Удалить</ActionButton>
           </ListItem>
 
         ))}

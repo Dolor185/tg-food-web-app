@@ -71,16 +71,7 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
           }
         />
       </Label>
-      <Label>
-        Калории (ккал):
-        <Input
-          type="number"
-          value={product.calories}
-          onChange={(e) =>
-            setProduct({ ...product, calories: parseFloat(e.target.value) || 0 })
-          }
-        />
-      </Label>
+ 
       <Button type="submit">Добавить продукт</Button>
     </Form>
   );

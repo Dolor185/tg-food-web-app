@@ -4,7 +4,7 @@ const lightTheme = {
   text: "#222",
   inputBg: "#fff",
   inputBorder: "#ccc",
-  button: "#3b82f6",
+  button: "#40a7e3",
   buttonText: "#fff",
   accent: "#3b82f6",
 };

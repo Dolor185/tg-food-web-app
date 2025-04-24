@@ -49,6 +49,7 @@ toast.success("Product added successfully");
       // Если сервинг в граммах, используем вес
       factor = amount / parseFloat(selectedServing.metric_serving_amount);
     }
+    const entryId = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 
     const nutrients = {
       calories: selectedServing.calories * factor,
@@ -57,6 +58,7 @@ toast.success("Product added successfully");
       carbs: selectedServing.carbohydrate * factor,
     };
     const productPayload = {
+      entryId:entryId,
       id: product.food_id,
       name: product.food_name,
       amount: amount,
