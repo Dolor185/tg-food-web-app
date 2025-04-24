@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ModalOverlay, ModalContent, CloseButton, Row, Section, ChartWrapper, StyledSelect } from "./Modal.styled";
+import { Row, Section, ChartWrapper, StyledSelect } from "./Modal.styled";
+import { ModalOverlay, ModalContent, CloseButton } from "../../styles/Modal.styled";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
@@ -55,7 +56,7 @@ toast.success("Product added successfully");
       fat: selectedServing.fat * factor,
       carbs: selectedServing.carbohydrate * factor,
     };
-    const products = {
+    const productPayload = {
       id: product.food_id,
       name: product.food_name,
       amount: amount,
@@ -73,7 +74,7 @@ toast.success("Product added successfully");
         params: {
           nutrients: JSON.stringify(nutrients),
           user,
-          products: JSON.stringify(products),
+          product: JSON.stringify(productPayload),
         },
       });
       // onClose();

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CustomProductForm } from './CustomProductForm';
+import { ModalCustom } from './ModalCustom';
 
 import {ActionButton,List,ButtonRow,ListItem,Title,Container} from '../PersonalInfo.styled'
 
@@ -11,6 +12,8 @@ export const CustomProductsList = ({userId,onBack}) => {
 
   const [products, setProducts] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${url}/custom-products`, {
@@ -42,17 +45,29 @@ export const CustomProductsList = ({userId,onBack}) => {
     }
   };
 
+  const handleClick = (product) => () => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  }
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
   return (
     <Container>
       <Title>Мои кастомные продукты</Title>
       <List>
         {products.map((product) => (
-          <ListItem key={product._id}>
+          <ListItem key={product._id} onClick={handleClick(product)}>
             {product.name} — {product.protein}г белка, {product.fat}г жира, {product.carbs}г углеводов
             <ActionButton onClick={() => handleDelete(product._id)}>Удалить</ActionButton>
           </ListItem>
+
         ))}
       </List>
+      {isModalOpen && <ModalCustom product={selectedProduct} onClose={handleCloseModal} userId={userId}/>}
+
       {isAdding && (
   <CustomProductForm
     userId={userId}
