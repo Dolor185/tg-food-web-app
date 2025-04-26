@@ -42,8 +42,13 @@ export const History = ({ userId, onBack}) => {
   return (
 
     <div style={{ marginTop: "20px" }}>
-                   <Button onClick={fetchHistory}>Обновить</Button>
+    <Button onClick={fetchHistory}>Обновить</Button>
       <h2>История питания (последние 7 дней)</h2>
+      {history.length === 0 && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <p>Нет данных о питании за последние 7 дней.</p>
+        </div>
+      )}
       {history.map((entry, index) => (
         <div
           key={index}
