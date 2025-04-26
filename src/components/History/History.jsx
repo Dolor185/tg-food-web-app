@@ -6,17 +6,19 @@ export const History = ({ userId, onBack}) => {
   const [history, setHistory] = useState([]);
   const url = process.env.REACT_APP_URL;
 
+  const fetchHistory = async () => {
+    try {
+      const res = await axios.get(`${url}/history`, {
+        params: { userId },
+      });
+      setHistory(res.data.history);
+    } catch (err) {
+      console.error("Ошибка при загрузке истории:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await axios.get(`${url}/history`, {
-          params: { userId },
-        });
-        setHistory(res.data.history);
-      } catch (err) {
-        console.error("Ошибка при загрузке истории:", err);
-      }
-    };
+  
 
     fetchHistory();
   }, [userId]);
@@ -42,6 +44,7 @@ export const History = ({ userId, onBack}) => {
 
           {entry.products?.length > 0 && (
             <div style={{ marginTop: "10px" }}>
+              <Button onClick={fetchHistory}>Обновить</Button>
               <strong>Продукты:</strong>
               <ul style={{ paddingLeft: "18px", marginTop: "4px" }}>
                 {entry.products.map((product, i) => (
