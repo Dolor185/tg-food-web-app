@@ -25,6 +25,7 @@ export const History = ({ userId, onBack}) => {
 
   return (
     <div style={{ marginTop: "20px" }}>
+                   <Button onClick={fetchHistory}>Обновить</Button>
       <h2>История питания (последние 7 дней)</h2>
       {history.map((entry, index) => (
         <div
@@ -44,7 +45,7 @@ export const History = ({ userId, onBack}) => {
 
           {entry.products?.length > 0 && (
             <div style={{ marginTop: "10px" }}>
-              <Button onClick={fetchHistory}>Обновить</Button>
+ 
               <strong>Продукты:</strong>
               <ul style={{ paddingLeft: "18px", marginTop: "4px" }}>
                 {entry.products.map((product, i) => (
