@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from '../../styles/FormElements.styled';
+import { ClipLoader } from "react-spinners";
 
 export const History = ({ userId, onBack}) => {
   const [history, setHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const url = process.env.REACT_APP_URL;
 
   const fetchHistory = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.get(`${url}/history`, {
         params: { userId },
       });
       setHistory(res.data.history);
+      setIsLoading(false);
     } catch (err) {
       console.error("Ошибка при загрузке истории:", err);
     }
@@ -23,7 +27,17 @@ export const History = ({ userId, onBack}) => {
     fetchHistory();
   }, [userId]);
 
+  if (isLoading) {
+    return (
+      <div>
+        <ClipLoader color="#40a7e3" size={40} />
+      </div>
+    );
+  }
+
+
   return (
+
     <div style={{ marginTop: "20px" }}>
                    <Button onClick={fetchHistory}>Обновить</Button>
       <h2>История питания (последние 7 дней)</h2>
