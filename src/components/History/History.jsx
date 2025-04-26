@@ -15,9 +15,12 @@ export const History = ({ userId, onBack}) => {
         params: { userId },
       });
       setHistory(res.data.history);
-      setIsLoading(false);
+
     } catch (err) {
       console.error("Ошибка при загрузке истории:", err);
+    }
+    finally {
+      setIsLoading(false); // Всегда выключать загрузку
     }
   };
 
