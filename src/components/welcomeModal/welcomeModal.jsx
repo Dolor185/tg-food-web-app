@@ -143,9 +143,9 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
           </>
         ) : (
           <div>
-            <h3>Ваша суточная норма калорий: {calories} ккал </h3>
+            <h3>Your daily calorie intake:{calories} kcal </h3>
             <h3>
-              Нутриенты : protein {nutrients.protein} g, fat {nutrients.fat} g, carbs {nutrients.carbs} g
+             Nutrients : protein {nutrients.protein} g, fat {nutrients.fat} g, carbs {nutrients.carbs} g
             </h3>
 
             {/* Слайдеры для изменения коэффициентов */}
@@ -153,7 +153,7 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
               <>
                 <div>
                   <Label>
-                    Белок (г/кг): 
+                    Protein (g/kg): 
                     <Input 
                       type="range" 
                       min="1.0" 
@@ -162,13 +162,13 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                       value= {proteinCoef}
                       onChange={(e) => setProteinCoef(e.target.value)} 
                     />
-                    {proteinCoef} г/кг
+                    {proteinCoef} g/kg
                   </Label>
                 </div>
 
                 <div>
                   <Label>
-                    Жир (г/кг): 
+                    Fat (g/kg): 
                     <Input 
                       type="range" 
                       min="0.5" 
@@ -177,11 +177,11 @@ export const WelcomeModal = ({ isOpen, onClose }) => {
                       value={fatCoef}
                       onChange={(e) => setFatCoef(e.target.value)} 
                     />
-                    {fatCoef} г/кг
+                    {fatCoef} g/kg
                   </Label>
                 </div>
 
-                <Button type="button" onClick={handleRecalculate}>Пересчитать</Button>
+                <Button type="button" onClick={handleRecalculate}>Recalculate</Button>
 
                 <Button type="button" onClick={onClose}>Done!</Button>
               </>

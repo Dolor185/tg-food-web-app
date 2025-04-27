@@ -5,11 +5,11 @@ export const PeriodPicker = ({ handlePeriodChange, onBack}) => {
 
   return (
     <div>
-      <h3>Выберите период расчёта:</h3>
+      <h3>Choose period</h3>
       <div style={{ display: 'flex', gap: '10px' }}>
         {periods.map((p) => (
           <Button key={p} onClick={() => handlePeriodChange(p)}>
-            {p} день{p > 1 ? 'а' : ''}
+            {p} day{p > 1 ? 's' : ''}
           </Button>
         ))}
         <Button onClick={onBack} style={{ marginLeft: 'auto' }}>

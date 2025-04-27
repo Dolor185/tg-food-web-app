@@ -5,6 +5,7 @@ import { CustomProductForm } from './CustomProductForm';
 import { ModalCustom } from './ModalCustom';
 import { ClipLoader } from "react-spinners"; 
 import {ActionButton,List,ButtonRow,ListItem,Title,Container} from '../PersonalInfo.styled'
+import { FiRefreshCcw } from 'react-icons/fi';
 
 
 export const CustomProductsList = ({userId,onBack}) => {
@@ -71,12 +72,12 @@ export const CustomProductsList = ({userId,onBack}) => {
 
   return (
     <Container>
-      <Title>Мои кастомные продукты</Title>
+      <Title>My custom products</Title>
       <List>
         {products.map((product) => (
           <ListItem key={product._id} onClick={handleClick(product)}>
-            {product.name} — {product.protein}г белка, {product.fat}г жира, {product.carbs}г углеводов
-            <ActionButton onClick={(e) =>  { e.stopPropagation(); handleDelete(product._id)}}>Удалить</ActionButton>
+            {product.name} — {product.protein}g protein, {product.fat}g fat, {product.carbs}g carbs
+            <ActionButton onClick={(e) =>  { e.stopPropagation(); handleDelete(product._id)}}>Delete</ActionButton>
           </ListItem>
 
         ))}
@@ -94,10 +95,10 @@ export const CustomProductsList = ({userId,onBack}) => {
 )}
 <ButtonRow>
       <ActionButton onClick={() => setIsAdding(!isAdding)}>
-        {isAdding ? "Отмена" : "Добавить продукт"}
+        {isAdding ? "Cancel" : "Add "}
       </ActionButton>
-      <ActionButton onClick={onBack}>Назад</ActionButton>
-      <ActionButton onClick={fetchProducts}>reload</ActionButton>
+      <ActionButton onClick={onBack}>Back</ActionButton>
+      <ActionButton onClick={fetchProducts}> <FiRefreshCcw size={20} /></ActionButton>
 
       </ButtonRow>
     </Container>

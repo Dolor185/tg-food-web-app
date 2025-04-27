@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {ActionButton,List,ListItem,Title,Container} from '../PersonalInfo/PersonalInfo.styled'
 import { ClipLoader } from "react-spinners";
+import { FiRefreshCcw } from 'react-icons/fi';
 
 export const History = ({ userId, onBack}) => {
   const [history, setHistory] = useState([]);
@@ -42,11 +43,11 @@ export const History = ({ userId, onBack}) => {
   return (
 
     <Container style={{ marginTop: "20px" }}>
-    <ActionButton onClick={fetchHistory}>Обновить</ActionButton>
-      <h2>История питания (последние 7 дней)</h2>
+    <ActionButton onClick={fetchHistory}> <FiRefreshCcw size={20} /></ActionButton>
+      <h2>History of nutrition (last 7 days)</h2>
       {history.length === 0 && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <p>Нет данных о питании за последние 7 дней.</p>
+          <p>No nutritional data for the last 7 days.</p>
         </div>
       )}
       {history.map((entry, index) => (
@@ -54,15 +55,15 @@ export const History = ({ userId, onBack}) => {
           key={index}
         >
           <Title>{new Date(entry.date).toLocaleDateString()}</Title>
-          <p>Белки: {entry.total?.protein || 0} г</p>
-          <p>Жиры: {entry.total?.fat || 0} г</p>
-          <p>Углеводы: {entry.total?.carbs || 0} г</p>
-          <p>Калории: {entry.total?.calories || 0} ккал</p>
+          <p>Proteins: {entry.total?.protein || 0} g</p>
+          <p>Fats: {entry.total?.fat || 0} g</p>
+          <p>Carbs: {entry.total?.carbs || 0} g</p>
+          <p>Calories: {entry.total?.calories || 0} kcal</p>
 
           {entry.products?.length > 0 && (
             <Container style={{ marginTop: "10px" }}>
  
-              <Title>Продукты:</Title>
+              <Title>Products:</Title>
               <List >
                 {entry.products.map((product, i) => (
                   <ListItem key={i}>

@@ -32,7 +32,7 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
   return (
     <Form onSubmit={handleAddProduct}> 
       <Label>
-        Название продукта:
+        Name of product:
         <Input
           type="text"
           value={product.name}
@@ -42,7 +42,7 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
         />    
       </Label>
       <Label>
-        Белки (г):
+        Proteins (g):
         <Input
           type="number"
           value={product.protein}
@@ -52,7 +52,7 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
         />
       </Label>
       <Label>
-        Жиры (г):
+        Fats (g):
         <Input
           type="number"
           value={product.fat}
@@ -62,7 +62,7 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
         />
       </Label>
       <Label>
-        Углеводы (г):
+        Carbs (g):
         <Input
           type="number"
           value={product.carbs}
@@ -72,7 +72,7 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
         />
       </Label>
  
-      <Button type="submit">Добавить продукт</Button>
+      <Button type="submit">Add</Button>
     </Form>
   );
 };

@@ -32,7 +32,7 @@ export const CustomLimits = ({ setMaxValues, onBack }) => {
   return (
     <Form onSubmit={handleCustomLimitsSave}>
       <Label>
-        Белки (г):
+        Proteins (g):
         <Input
           type="number"
           value={newLimits.protein}
@@ -42,7 +42,7 @@ export const CustomLimits = ({ setMaxValues, onBack }) => {
         />
       </Label>
       <Label>
-        Жиры (г):
+        Fats (g):
         <Input
           type="number"
           value={newLimits.fat}
@@ -52,7 +52,7 @@ export const CustomLimits = ({ setMaxValues, onBack }) => {
         />
       </Label>
       <Label>
-        Углеводы (г):
+        Carbs (g):
         <Input
           type="number"
           value={newLimits.carbs}
@@ -61,8 +61,8 @@ export const CustomLimits = ({ setMaxValues, onBack }) => {
           }
         />
       </Label>
-      <Button type="submit">Сохранить</Button>
-      <Button type="button" onClick={onBack} style={{ marginLeft: '10px' }}>Назад</Button>
+      <Button type="submit">Save</Button>
+      <Button type="button" onClick={onBack} style={{ marginLeft: '10px' }}>onBack</Button>
     </Form>
   );
 };

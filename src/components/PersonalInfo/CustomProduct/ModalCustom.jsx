@@ -80,10 +80,10 @@ const nutrients = {
 </Label>
 <Button type="submit">Add</Button>
             </Form>
-            <p>Калории: {calories} kcal</p>
-            <p>Белки: {product.protein}g</p>
-            <p>Жиры: {product.fat}g</p>
-            <p>Углеводы: {product.carbs}g</p>
+            <p>Calories: {calories} kcal</p>
+            <p>Proteins: {product.protein}g</p>
+            <p>Fats: {product.fat}g</p>
+            <p>Carbs: {product.carbs}g</p>
             <CloseButton onClick={onClose}>x</CloseButton>
         </ModalContent>
         </ModalOverlay>

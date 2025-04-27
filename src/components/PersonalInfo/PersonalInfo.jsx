@@ -173,9 +173,9 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
             <Title>{tg.initDataUnsafe?.user?.username}'s info</Title>
             <Subtitle>Here is your nutrient limits and list of products</Subtitle>
 <ButtonsRow>
-            <Button onClick={() => setModalView("period")}>Выбрать период</Button>
-            <Button onClick={() => setModalView("customLimits")}>Кастомизировать БЖУ</Button>
-            <Button onClick={() => setModalView("history")}>История</Button>
+            <Button onClick={() => setModalView("period")}>Choose period</Button>
+            <Button onClick={() => setModalView("customLimits")}>Custom limits</Button>
+            <Button onClick={() => setModalView("history")}>History</Button>
             <Button onClick={() => setModalView("customProducts")}>My products</Button></ButtonsRow>
             {data && <NutrientBars data={data} maxValues={maxValues} />}
 
@@ -190,13 +190,12 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
                   <p>{product.name}</p>
                   <p>{product.amount} ({product.metric_serving_unit})</p>
                   </ProductInfo>
-                  <Button onClick={() => handleDelete(product.entryId)}>Удалить</Button>
+                  <Button onClick={() => handleDelete(product.entryId)}>Delete</Button>
                 </Product>
               ))}
 
             <Button onClick={handleRestoreDefaults} style={{ marginTop: "10px" }}>
-              Вернуть рекомендованные значения
-            </Button>
+            Restore recommended values            </Button>
 
 
           </>

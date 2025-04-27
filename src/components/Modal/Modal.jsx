@@ -137,15 +137,15 @@ toast.success("Product added successfully");
               ))}
             </StyledSelect>
           </Row>
-          <Button type="submit">Добавить</Button>
+          <Button type="submit">Add</Button>
         </Form>
 
         <Section>
-          <p>Нутриенты на {selectedServing.metric_serving_amount} {selectedServing.metric_serving_unit}:</p>
-          <p>Калории: {selectedServing.calories} ккал</p>
-          <p>Белки: {selectedServing.protein} г</p>
-          <p>Жиры: {selectedServing.fat} г</p>
-          <p>Углеводы: {selectedServing.carbohydrate} г</p>
+          <p>Nutrients per {selectedServing.metric_serving_amount} {selectedServing.metric_serving_unit}:</p>
+          <p>Calories: {selectedServing.calories} kcal</p>
+          <p>Proteins: {selectedServing.protein} g</p>
+          <p>Fats: {selectedServing.fat} g</p>
+          <p>Carbs: {selectedServing.carbohydrate} g</p>
         </Section>
 
         <ChartWrapper>
