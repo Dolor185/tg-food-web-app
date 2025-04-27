@@ -3,8 +3,9 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CustomProductForm } from './CustomProductForm';
 import { ModalCustom } from './ModalCustom';
-
+import { ClipLoader } from "react-spinners"; 
 import {ActionButton,List,ButtonRow,ListItem,Title,Container} from '../PersonalInfo.styled'
+
 
 export const CustomProductsList = ({userId,onBack}) => {
 
@@ -14,8 +15,11 @@ export const CustomProductsList = ({userId,onBack}) => {
   const [isAdding, setIsAdding] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+   const [isLoading, setIsLoading] = useState(false);
   const fetchProducts = async () => {
     try {
+      setIsLoading(true);
+
       const response = await axios.get(`${url}/custom-products`, {
         params: { userId: userId },
       });
@@ -23,6 +27,9 @@ export const CustomProductsList = ({userId,onBack}) => {
     } catch (error) {
       console.error("Error fetching custom products:", error);
       toast.error("Failed to fetch custom products");
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,6 +61,14 @@ export const CustomProductsList = ({userId,onBack}) => {
     setSelectedProduct(null);
   };
 
+  if(isLoading){
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+        <ClipLoader color="#40a7e3" size={40} />
+      </div>
+    );
+  }
+
   return (
     <Container>
       <Title>Мои кастомные продукты</Title>
@@ -82,6 +97,8 @@ export const CustomProductsList = ({userId,onBack}) => {
         {isAdding ? "Отмена" : "Добавить продукт"}
       </ActionButton>
       <ActionButton onClick={onBack}>Назад</ActionButton>
+      <ActionButton onClick={fetchProducts}>reload</ActionButton>
+
       </ButtonRow>
     </Container>
   );

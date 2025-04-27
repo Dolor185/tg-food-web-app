@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {ActionButton,List,ButtonRow,ListItem,Title,Container} from '../PersonalInfo/PersonalInfo.styled'
+import {ActionButton,List,ListItem,Title,Container} from '../PersonalInfo/PersonalInfo.styled'
 import { ClipLoader } from "react-spinners";
 
 export const History = ({ userId, onBack}) => {
@@ -32,9 +32,9 @@ export const History = ({ userId, onBack}) => {
 
   if (isLoading) {
     return (
-      <div>
-        <ClipLoader color="#40a7e3" size={40} />
-      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+  <ClipLoader color="#40a7e3" size={40} />
+</div>
     );
   }
 
