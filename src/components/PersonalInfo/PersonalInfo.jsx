@@ -155,7 +155,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         );
       case "period":
         return (
-          <PeriodPicker handlePeriodChange={handlePeriodChange} />
+          <PeriodPicker handlePeriodChange={handlePeriodChange}  onBack={() => setModalView("main")}/>
         );
         case "history":
           return <History userId={user} onBack={() => setModalView("main")}/>;

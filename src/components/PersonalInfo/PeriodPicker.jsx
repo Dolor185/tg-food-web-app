@@ -1,6 +1,6 @@
 import { Button } from '../../styles/FormElements.styled';
 
-export const PeriodPicker = ({ handlePeriodChange }) => {
+export const PeriodPicker = ({ handlePeriodChange, onBack}) => {
   const periods = [1, 3, 7];
 
   return (
@@ -12,6 +12,9 @@ export const PeriodPicker = ({ handlePeriodChange }) => {
             {p} день{p > 1 ? 'а' : ''}
           </Button>
         ))}
+        <Button onClick={onBack} style={{ marginLeft: 'auto' }}>
+          Back
+        </Button>
       </div>
     </div>
   );
