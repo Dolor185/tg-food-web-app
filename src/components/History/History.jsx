@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button } from '../../styles/FormElements.styled';
+import {ActionButton,List,ButtonRow,ListItem,Title,Container} from '../PersonalInfo/PersonalInfo.styled'
 import { ClipLoader } from "react-spinners";
 
 export const History = ({ userId, onBack}) => {
@@ -41,8 +41,8 @@ export const History = ({ userId, onBack}) => {
 
   return (
 
-    <div style={{ marginTop: "20px" }}>
-    <Button onClick={fetchHistory}>Обновить</Button>
+    <Container style={{ marginTop: "20px" }}>
+    <ActionButton onClick={fetchHistory}>Обновить</ActionButton>
       <h2>История питания (последние 7 дней)</h2>
       {history.length === 0 && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
@@ -50,37 +50,31 @@ export const History = ({ userId, onBack}) => {
         </div>
       )}
       {history.map((entry, index) => (
-        <div
+        <Container
           key={index}
-          style={{
-            background: "#f9f9f9",
-            padding: "12px",
-            margin: "12px 0",
-            borderRadius: "10px",
-          }}
         >
-          <strong>{new Date(entry.date).toLocaleDateString()}</strong>
+          <Title>{new Date(entry.date).toLocaleDateString()}</Title>
           <p>Белки: {entry.total?.protein || 0} г</p>
           <p>Жиры: {entry.total?.fat || 0} г</p>
           <p>Углеводы: {entry.total?.carbs || 0} г</p>
           <p>Калории: {entry.total?.calories || 0} ккал</p>
 
           {entry.products?.length > 0 && (
-            <div style={{ marginTop: "10px" }}>
+            <Container style={{ marginTop: "10px" }}>
  
-              <strong>Продукты:</strong>
-              <ul style={{ paddingLeft: "18px", marginTop: "4px" }}>
+              <Title>Продукты:</Title>
+              <List >
                 {entry.products.map((product, i) => (
-                  <li key={i}>
+                  <ListItem key={i}>
                     {product.name} — {product.amount} {product.metric_serving_unit}
-                  </li>
+                  </ListItem>
                 ))}
-              </ul>
-            </div>
+              </List>
+            </Container>
           )}
-        </div>
+        </Container>
       ))}
-      <Button type="button" onClick={onBack} style={{ marginLeft: '10px' }}>Назад</Button>
-    </div>
+      <ActionButton type="button" onClick={onBack} style={{ marginLeft: '10px' }}>Назад</ActionButton>
+    </Container>
   );
 };
