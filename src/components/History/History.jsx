@@ -75,7 +75,7 @@ export const History = ({ userId, onBack}) => {
           )}
         </Container>
       ))}
-      <ActionButton type="button" onClick={onBack} style={{ marginLeft: '10px' }}>Назад</ActionButton>
+      <ActionButton type="button" onClick={onBack} style={{ marginLeft: '10px' }}>Back</ActionButton>
     </Container>
   );
 };
