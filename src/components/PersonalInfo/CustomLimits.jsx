@@ -62,7 +62,7 @@ export const CustomLimits = ({ setMaxValues, onBack }) => {
         />
       </Label>
       <Button type="submit">Save</Button>
-      <Button type="button" onClick={onBack} style={{ marginLeft: '10px' }}>onBack</Button>
+      <Button type="button" onClick={onBack} style={{ marginLeft: '10px' }}>Back</Button>
     </Form>
   );
 };
