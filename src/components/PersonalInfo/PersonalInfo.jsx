@@ -121,7 +121,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       {
         label: "Калории",
         data: [
-          data?.calories || 0,
+          data?.calories.toFixed(2) || 0,
           Math.max(maxValues.dailyCalories - data?.calories, 0).toFixed(2),
         ],
         backgroundColor: ["#FF6384", "#36A2EB"],
