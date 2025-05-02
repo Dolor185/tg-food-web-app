@@ -17,7 +17,7 @@ export const CustomLimits = ({ setMaxValues, onBack }) => {
         nutrients: newLimits,
       });
 
-      toast.success("Кастомные лимиты сохранены!");
+      toast.success("Limits saved!");
 
       const dailyCalories = newLimits.protein * 4 + newLimits.fat * 9 + newLimits.carbs * 4;
       const limits = { ...newLimits, dailyCalories };
@@ -25,7 +25,7 @@ export const CustomLimits = ({ setMaxValues, onBack }) => {
       onBack();
     } catch (error) {
       console.error("Ошибка при сохранении лимитов:", error);
-      toast.error("Не удалось сохранить лимиты.");
+      toast.error("Something went wrong.");
     }
   };
 

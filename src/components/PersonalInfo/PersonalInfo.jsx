@@ -74,7 +74,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         prev.filter((product) => product.entryId !== entryId)
       );
       getData();
-      toast.success("Продукт удалён");
+      toast.success("Product deleted successfully");
     } catch (error) {
       console.error("Ошибка при удалении:", error);
     }
@@ -91,7 +91,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       const limits = await axios.get(`${url}/limits`, { params: { user } });
       setMaxValues(limits.data);
       setModalView("main");
-      toast.success("Период обновлён");
+      toast.success("Period updated successfully");
     } catch (error) {
       console.error("Ошибка при обновлении периода:", error);
     }
@@ -108,10 +108,10 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
 
       const restored = { protein, fat, carbs, dailyCalories };
       setMaxValues(restored);
-      toast.success("Рекомендованные значения восстановлены");
+      toast.success("Restored default values successfully");
     } catch (error) {
       console.error("Ошибка при восстановлении:", error);
-      toast.error("Не удалось восстановить значения.");
+      toast.error("Error restoring default values");
     }
   };
 
