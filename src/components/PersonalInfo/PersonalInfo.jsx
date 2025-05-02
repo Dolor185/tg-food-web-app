@@ -116,10 +116,10 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   };
 
   const pieData = {
-    labels: ["Использовано", "Осталось"],
+    labels: ["Used", "Rest"],
     datasets: [
       {
-        label: "Калории",
+        label: "Calories",
         data: [
           data?.calories.toFixed(2) || 0,
           Math.max(maxValues.dailyCalories - data?.calories, 0).toFixed(2),
