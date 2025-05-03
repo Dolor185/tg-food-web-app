@@ -12,6 +12,7 @@ import {
 import { BarcodeScanner } from "../BarcodeScanner/BarcodeScanner";
 import { barcodeScan } from "../../hooks/barcodeScan";
 import { getFoodById } from "../../hooks/getFoodById";
+import { set } from "mongoose";
 
 
 export const SearchForm = () => {
@@ -35,6 +36,7 @@ export const SearchForm = () => {
     const food = getFoodById(foodId);
 
     setProduct(food);
+    setIsSubmitted(true);
   };
 
   return (
