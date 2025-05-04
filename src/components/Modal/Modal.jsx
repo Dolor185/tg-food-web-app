@@ -124,7 +124,7 @@ toast.success("Product added successfully");
           <Row>
             <Input
               type="text"
-              placeholder="Вес"
+              placeholder="Weitht (grams)"
               value={value}
               onChange={handleChange}
               required
