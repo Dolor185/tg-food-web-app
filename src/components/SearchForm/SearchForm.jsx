@@ -45,6 +45,7 @@ export const SearchForm = () => {
         <Label>
           Write your meal
           <Input
+          placeholder="Enter product name"
             onChange={handleChange}
             value={localProduct}
             type="text"
