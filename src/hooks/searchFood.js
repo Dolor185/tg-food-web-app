@@ -27,8 +27,8 @@ export const searchFood = async (query, page = 0) => {
     console.log("Original count:", allFoods.length);
     console.log("Filtered count:", filteredFoods.length);
     console.log("Words:", words);
-
-    return filteredFoods;
+    console.log("API response:", allFoods);
+    return allFoods;
   } catch (error) {
     console.error("Error searching for food:", error.message);
     return [];
