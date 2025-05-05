@@ -10,18 +10,23 @@ export const searchFood = async (query, page = 0) => {
     const allFoods =
       response.data?.foods_search?.results?.food || [];
 
-    // Разбиваем запрос на отдельные слова
-    const words = query.toLowerCase().split(/\s+/);
+    const words = query
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean); // убираем пустые строки
 
-    // Фильтруем: продукт должен содержать ВСЕ слова в name или brand_name
     const filteredFoods = allFoods.filter((food) => {
-      const name = food.food_name?.toLowerCase() || "";
-      const brand = food.brand_name?.toLowerCase() || "";
+      const name = (food.food_name || "").toLowerCase();
+      const brand = (food.brand_name || "").toLowerCase();
 
-      return words.every(
-        (word) => name.includes(word) || brand.includes(word)
-      );
+      const combined = `${name} ${brand}`;
+
+      return words.every((word) => combined.includes(word));
     });
+
+    console.log("Original count:", allFoods.length);
+    console.log("Filtered count:", filteredFoods.length);
+    console.log("Words:", words);
 
     return filteredFoods;
   } catch (error) {
