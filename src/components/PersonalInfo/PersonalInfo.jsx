@@ -170,7 +170,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         return (
           <>
             <CloseButton onClick={onClose}>×</CloseButton>
-            <Title>{tg.initDataUnsafe?.user?.username}'s info</Title>
+            <Title>{tg.initDataUnsafe?.user?.username}'s personal info</Title>
             <Subtitle>Here is your nutrient limits and list of products</Subtitle>
 <ButtonsRow>
             <Button onClick={() => setModalView("period")}>Choose period</Button>
