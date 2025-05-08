@@ -113,6 +113,22 @@ toast.success("Product added successfully");
     },
   };
 
+  const getDitails = async(product) => {
+
+    try {
+      const response  = await axios.get(`${url}/food-details`, {
+        params: {
+          id: product.food_id
+        }})
+        if (response.data){
+          console.log(response);
+        }
+      
+    } catch (error) {
+      console.log("Ошибка при получении данных:", error.message);
+    }
+  }
+
   return (
     <ModalOverlay $isClosing={isClosing}>
       <ModalContent $isClosing={isClosing}>
@@ -151,6 +167,7 @@ toast.success("Product added successfully");
         <ChartWrapper>
           <Pie data={data} options={options} />
         </ChartWrapper>
+        <button onClick={()=>{getDitails(product)}}>Get details</button>
       </ModalContent>
     </ModalOverlay>
   );
