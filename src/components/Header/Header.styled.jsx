@@ -1,5 +1,11 @@
 import styled from "styled-components";
 export const Button = styled.button`
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 10px 16px;
   font-size: 1rem;
   font-weight: bold;
@@ -26,10 +32,11 @@ export const Button = styled.button`
 `;
 
 export const HeaderDiv = styled.div`
-  display: flex !important;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  width: 100%; 
   background: var(--tg-theme-bg-color);
   color: var(--tg-theme-text-color);
   font-weight: 600;
