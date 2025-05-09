@@ -60,6 +60,9 @@ background: var(--tg-theme-bg-color);
 `;
 
 export const Button = styled.button`
+display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px 16px;
   font-size: 1rem;
   font-weight: bold;

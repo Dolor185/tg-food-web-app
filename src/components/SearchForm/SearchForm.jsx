@@ -12,6 +12,10 @@ import {
 import { BarcodeScanner } from "../BarcodeScanner/BarcodeScanner";
 import { barcodeScan } from "../../hooks/barcodeScan";
 import { getFoodById } from "../../hooks/getFoodById";
+import { FiCamera } from "react-icons/fi";
+import { CiSearch } from "react-icons/ci";
+
+
 
 
 
@@ -72,9 +76,10 @@ export const SearchForm = () => {
             required
           />
         </Label>
-        <Button type="submit">Search</Button>
+        <Button type="submit">Search <CiSearch/></Button>
         <Button type="button" onClick={() => setIsScannerOpen(true)}>
-          Scan Barcode
+         <FiCamera />
+
         </Button>
       </Form>
       {isScannerOpen && (
