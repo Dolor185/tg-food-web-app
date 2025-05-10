@@ -171,7 +171,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
           <>
             <CloseButton onClick={onClose}>×</CloseButton>
             <Title>{tg.initDataUnsafe?.user?.username}'s personal info</Title>
-            <Subtitle>Here is your nutrient limits and list of products</Subtitle>
+            <Subtitle>Here is your daily nutrient goals  and list of products</Subtitle>
 <ButtonsRow>
             <Button onClick={() => setModalView("period")}>Choose period</Button>
             <Button onClick={() => setModalView("customLimits")}>Custom limits</Button>
