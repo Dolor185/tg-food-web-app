@@ -43,24 +43,6 @@ export const SearchForm = () => {
     setIsSubmitted(true);
   };
 
-//   import { useState, useEffect } from "react";
-// import debounce from "lodash.debounce";
-
-// const [query, setQuery] = useState("");
-// const [suggestions, setSuggestions] = useState([]);
-
-// useEffect(() => {
-//   const fetchSuggestions = debounce(async () => {
-//     if (!query) return;
-//     const res = await axios.get(`${url}/food-autocomplete`, {
-//       params: { expression: query },
-//     });
-//     setSuggestions(res.data.suggestions?.suggestion || []);
-//   }, 300); // 300 мс задержка
-
-//   fetchSuggestions();
-//   return () => fetchSuggestions.cancel(); // отмена предыдущего вызова
-// }, [query]);
 
   return (
     <>
