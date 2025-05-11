@@ -10,18 +10,50 @@ import { ResultsTable } from "../ResultsTable/ResultsTable";
 import { PersonalInfo } from "../PersonalInfo/PersonalInfo";
 import { WelcomeModal } from "../welcomeModal/welcomeModal";
 import axios from "axios";
+import { SuggestedProducts } from "../SuggestedProducts/SuggestedProducts";
 export const App = () => {
   const { isSubmitted } = useContext(ProductContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(false); 
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
+  const [suggested, setSuggested] = useState([]);
+
+  const tg = window.Telegram.WebApp;
+  const user = tg.initDataUnsafe?.user?.id;
+  const url = process.env.REACT_APP_URL;
+
+  const fetchSuggested = async () => {
+    const response = await axios.get(`${url}/history`, {
+      params: { userId: user }
+    });
+
+    const productMap = new Map();
+    const treshold = 3; // Минимальное количество использований для отображения
+
+    for (const entry of response.data.history) {
+      const products = entry._doc?.products || entry.products;
+      if (!Array.isArray(products)) continue;
+
+      for (const product of products) {
+        const key = `${product.name}|${product.metric_serving_unit}`;
+        const count = productMap.get(key)?.count || 0;
+
+        productMap.set(key, { ...product, count: count + 1 });
+      }
+    }
+
+    const frequent = [...productMap.values()]
+      .filter(p => p.count >= treshold)
+      .sort((a, b) => b.count - a.count);
+
+    setSuggested(frequent);
+  };
 
   useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    const user = tg.initDataUnsafe?.user?.id;
-    const url = process.env.REACT_APP_URL;
-
+ 
+    fetchSuggested()
+   
 
     const  checkUser = async(user) => {
       const response = await axios.get(`${url}/first-open`, {
@@ -38,7 +70,7 @@ export const App = () => {
 
     tg.ready();
     console.log("Telegram WebApp is ready");
-  }, []);
+  }, [user]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -68,6 +100,7 @@ export const App = () => {
         onClose={closeModal}
       />
       <SearchForm></SearchForm>
+      <SuggestedProducts products = {suggested} />
       {isSubmitted && <ResultsTable />}
       {isFirstVisit && <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal}/>}
       <ToastContainer position="top-center" autoClose={2000} />
