@@ -21,7 +21,7 @@ export const App = () => {
     const tg = window.Telegram.WebApp;
     const user = tg.initDataUnsafe?.user?.id; // Получаем ID пользователя
     const url = process.env.REACT_APP_URL;
-    console.log(user);
+
 
     const  checkUser = async(user) => {
       const response = await axios.get(`${url}/first-open`, {
