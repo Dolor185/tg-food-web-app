@@ -19,7 +19,7 @@ export const App = () => {
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
-    const user = tg.initDataUnsafe?.user?.id; // Получаем ID пользователя
+    const user = tg.initDataUnsafe?.user?.id;
     const url = process.env.REACT_APP_URL;
 
 
