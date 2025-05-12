@@ -20,6 +20,8 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
   const [selectedServing, setSelectedServing] = useState(
     product.servings.serving[0]
   );
+  const [ date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [meal, setMeal] = useState('');
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -72,13 +74,10 @@ toast.success("Product added successfully");
     };
 
     try {
-      await axios.get(`${url}/add-update`, {
-        params: {
-          nutrients: JSON.stringify(nutrients),
-          user,
-          product: JSON.stringify(productPayload),
-        },
-      });
+      await axios.post(`${url}/add-update`, 
+        
+        { user, date, meal, nutrients, product:productPayload }
+      );
       // onClose();
     } catch (error) {
       console.error("Ошибка при отправке данных:", error);
@@ -152,6 +151,21 @@ toast.success("Product added successfully");
                 </option>
               ))}
             </StyledSelect>
+            <StyledSelect onChange={(e) => setMeal(e.target.value)} value={meal}>
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </StyledSelect>
+            <StyledSelect onChange={(e) => setDate(e.target.value)} value={date}>
+              <option value={new Date().toISOString().slice(0, 10)}>{new Date().toISOString().slice(0, 10)}</option>
+              <option value={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}>{new Date(Date.now() + 86400000).toISOString().slice(0, 10)}</option>
+              <option value={new Date(Date.now() + 172800000).toISOString().slice(0, 10)}>{new Date(Date.now() + 172800000).toISOString().slice(0, 10)}</option>
+              <option value={new Date(Date.now() + 259200000).toISOString().slice(0, 10)}>{new Date(Date.now() + 259200000).toISOString().slice(0, 10)}</option>
+              <option value={new Date(Date.now() + 345600000).toISOString().slice(0, 10)}>{new Date(Date.now() + 345600000).toISOString().slice(0, 10)}</option> 
+              <option value={new Date(Date.now() + 432000000).toISOString().slice(0, 10)}>{new Date(Date.now() + 432000000).toISOString().slice(0, 10)}</option>
+              <option value={new Date(Date.now() + 518400000).toISOString().slice(0, 10)}>{new Date(Date.now() + 518400000).toISOString().slice(0, 10)}</option>
+              </StyledSelect>
           </Row>
           <Button type="submit">Add</Button>
         </Form>
