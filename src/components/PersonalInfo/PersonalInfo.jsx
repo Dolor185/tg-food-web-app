@@ -32,11 +32,12 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const [maxValues, setMaxValues] = useState({});
   const [period, setPeriod] = useState(1);
   const [modalView, setModalView] = useState("main");
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
 
   const getData = useCallback(async () => {
     try {
       const [nutrientsRes, limitsRes] = await Promise.all([
-        axios.get(`${url}/check-nutrients`, { params: { user } }),
+        axios.get(`${url}/check-nutrients`, { params: { user,date } }),
         axios.get(`${url}/limits`, { params: { user } }),
       ]);
 
@@ -52,7 +53,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   useEffect(() => {
     if (!isOpen) return;
     getData();
-  }, [isOpen, user]);
+  }, [isOpen, user, date]);
 
   useEffect(() => {
     const scaled = {
@@ -170,7 +171,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         return (
           <>
             <CloseButton onClick={onClose}>×</CloseButton>
-            <Title>{tg.initDataUnsafe?.user?.username}'s personal info</Title>
+            <Title>{tg.initDataUnsafe?.user?.username}'s personal info for {date}</Title>
             <Subtitle>Here is your daily nutrient goals  and list of products</Subtitle>
 <ButtonsRow>
             <Button onClick={() => setModalView("period")}>Choose period</Button>
@@ -197,6 +198,10 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
             <Button onClick={handleRestoreDefaults} style={{ marginTop: "10px" }}>
             Restore recommended values            </Button>
 
+              <select onChange={(e) => setDate(e.target.value)} value={date} type="date" style={{ marginTop: "10px", width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", backgroundColor: "var(--tg-theme-secondary-bg-color)", color: "var(--tg-theme-text-color)" }}>
+              <option value={new Date().toISOString().slice(0, 10)}>{new Date().toISOString().slice(0, 10)}</option>
+              <option value={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}>{new Date(Date.now() + 86400000).toISOString().slice(0, 10)}</option>  
+              </select>
 
           </>
         );

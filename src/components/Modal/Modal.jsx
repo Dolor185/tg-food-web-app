@@ -152,10 +152,10 @@ toast.success("Product added successfully");
               ))}
             </StyledSelect>
             <StyledSelect onChange={(e) => setMeal(e.target.value)} value={meal}>
-              <option value="breakfast">Breakfast</option>
-              <option value="lunch">Lunch</option>
-              <option value="dinner">Dinner</option>
-              <option value="snack">Snack</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Snacks">Snacks</option>
             </StyledSelect>
             <StyledSelect onChange={(e) => setDate(e.target.value)} value={date}>
               <option value={new Date().toISOString().slice(0, 10)}>{new Date().toISOString().slice(0, 10)}</option>
