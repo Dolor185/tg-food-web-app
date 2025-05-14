@@ -40,7 +40,6 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         axios.get(`${url}/check-nutrients`, { params: { user,date } }),
         axios.get(`${url}/limits`, { params: { user } }),
       ]);
-      console.log("👀 nutrientsRes.data:", nutrientsRes.data);
       const nutrientData = nutrientsRes.data;
 
 if (nutrientData && nutrientData.totalNutrients) {
@@ -85,6 +84,7 @@ if (nutrientData && nutrientData.totalNutrients) {
       await axios.get(`${url}/delete-product`, {
         params: { entryId, user, date },
       });
+
 
       setProducts((prev) =>
         prev.filter((product) => product.entryId !== entryId)
@@ -136,21 +136,20 @@ if (nutrientData && nutrientData.totalNutrients) {
     setDate(selectedDate);
   }
 
+  const usedCalories = typeof data?.calories === 'number' ? data.calories : 0;
+  const remainingCalories = Math.max((maxValues.dailyCalories || 0) - usedCalories, 0);
+  
   const pieData = {
     labels: ["Used", "Rest"],
     datasets: [
       {
         label: "Calories",
-        data: [
-          data?.calories.toFixed(2) || 0,
-          Math.max(maxValues.dailyCalories - data?.calories, 0).toFixed(2),
-        ],
+        data: [usedCalories.toFixed(2), remainingCalories.toFixed(2)],
         backgroundColor: ["#FF6384", "#36A2EB"],
         hoverBackgroundColor: ["#FF6384", "#36A2EB"],
       },
     ],
   };
-
   const pieOptions = {
     plugins: {
       datalabels: {
