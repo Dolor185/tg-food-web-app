@@ -40,26 +40,34 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         axios.get(`${url}/check-nutrients`, { params: { user,date } }),
         axios.get(`${url}/limits`, { params: { user } }),
       ]);
-
+      console.log("👀 nutrientsRes.data:", nutrientsRes.data);
       const nutrientData = nutrientsRes.data;
 
-      if (Array.isArray(nutrientData) && nutrientData.length > 0) {
-        setData(nutrientData[0].totalNutrients || {});
-        setProducts(nutrientData[0].products || []);
-      } else {
-        setData(null);
-        setProducts([]);
-      }
+if (nutrientData && nutrientData.totalNutrients) {
+  setData(nutrientData.totalNutrients);
+  const allProducts = [
+    ...(nutrientData.meals?.Breakfast || []),
+    ...(nutrientData.meals?.Lunch || []),
+    ...(nutrientData.meals?.Dinner || []),
+    ...(nutrientData.meals?.Snacks || []),
+  ];
+  setProducts(allProducts);
+} else {
+  setData(null);
+  setProducts([]);
+}
+
       setOriginalMaxValues(limitsRes.data);
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
       toast.error("Ошибка при получении данных");
     }
-  }, [url, user]);
+  }, [url, user, date]);
 
   useEffect(() => {
     if (!isOpen) return;
     getData();
+    
   }, [isOpen, user, date]);
 
   useEffect(() => {
@@ -122,6 +130,11 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
       toast.error("Error restoring default values");
     }
   };
+
+  const onDateChange = (e) => {
+    const selectedDate = new Date(e.target.value).toISOString().slice(0, 10);
+    setDate(selectedDate);
+  }
 
   const pieData = {
     labels: ["Used", "Rest"],
@@ -205,7 +218,7 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
             <Button onClick={handleRestoreDefaults} style={{ marginTop: "10px" }}>
             Restore recommended values            </Button>
 
-              <select onChange={(e) => setDate(e.target.value)} value={date} type="date" style={{ marginTop: "10px", width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", backgroundColor: "var(--tg-theme-secondary-bg-color)", color: "var(--tg-theme-text-color)" }}>
+              <select onChange={onDateChange} value={date} type="date" style={{ marginTop: "10px", width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", backgroundColor: "var(--tg-theme-secondary-bg-color)", color: "var(--tg-theme-text-color)" }}>
               <option value={new Date().toISOString().slice(0, 10)}>{new Date().toISOString().slice(0, 10)}</option>
               <option value={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}>{new Date(Date.now() + 86400000).toISOString().slice(0, 10)}</option>  
               </select>
