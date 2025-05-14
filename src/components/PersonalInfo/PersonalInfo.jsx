@@ -41,8 +41,15 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
         axios.get(`${url}/limits`, { params: { user } }),
       ]);
 
-      setData(nutrientsRes.data[0].totalNutrients);
-      setProducts(nutrientsRes.data[0].products);
+      const nutrientData = nutrientsRes.data;
+
+      if (Array.isArray(nutrientData) && nutrientData.length > 0) {
+        setData(nutrientData[0].totalNutrients || {});
+        setProducts(nutrientData[0].products || []);
+      } else {
+        setData(null);
+        setProducts([]);
+      }
       setOriginalMaxValues(limitsRes.data);
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
