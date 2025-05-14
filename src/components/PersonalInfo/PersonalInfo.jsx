@@ -83,7 +83,7 @@ if (nutrientData && nutrientData.totalNutrients) {
   const handleDelete = async (entryId) => {
     try {
       await axios.get(`${url}/delete-product`, {
-        params: { entryId, user },
+        params: { entryId, user, date },
       });
 
       setProducts((prev) =>
