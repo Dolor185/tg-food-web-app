@@ -9,40 +9,68 @@ import {
   ScannerContainer,
   CloseButton,
 } from "./SearchForm.styled";
+
 import { BarcodeScanner } from "../BarcodeScanner/BarcodeScanner";
-import { barcodeScan } from "../../hooks/barcodeScan";
-import { getFoodById } from "../../hooks/getFoodById";
 import { FiCamera } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
 
-
-
-
+import { barcodeScan } from "../../hooks/barcodeScan";
+import { getFoodById } from "../../hooks/getFoodById";
+import { ModalBarcodeProduct } from "../BarcodeScanner/ModalBarcodeProduct";
 
 export const SearchForm = () => {
-  const { setProduct, setIsSubmitted } = useContext(ProductContext);
+  const { setProduct, setIsSubmitted, openProductModal } = useContext(ProductContext);
+
   const [localProduct, setLocalProduct] = useState("");
   const [isScannerOpen, setIsScannerOpen] = useState(false);
 
-  const handleChange = (e) => {
-    setLocalProduct(e.target.value);
-  };
+  const [isAddBarcodeModalOpen, setIsAddBarcodeModalOpen] = useState(false);
+  const [scannedBarcode, setScannedBarcode] = useState("");
+
+  const handleChange = (e) => setLocalProduct(e.target.value);
 
   const submitForm = (e) => {
     e.preventDefault();
     setProduct(localProduct);
     setIsSubmitted(true);
   };
-  const handleBarcodeDetected = (code) => {
+
+  const handleBarcodeDetected = async (code) => {
     setIsScannerOpen(false);
-    const foodId = barcodeScan(code);
+    setScannedBarcode(code);
 
-    const food = getFoodById(foodId);
+    try {
+      const result = await barcodeScan(code);
 
-    setProduct(food);
-    setIsSubmitted(true);
+      // ❌ не найдено нигде → показываем модалку добавления
+      if (!result) {
+        setIsAddBarcodeModalOpen(true);
+        return;
+      }
+
+      // ✅ найден локальный → сразу открываем общую Modal
+      if (result.type === "local") {
+        openProductModal(result.food);
+        return;
+      }
+
+      // ✅ найден fatsecret → тянем детали (чтобы были servings) и открываем Modal
+      if (result.type === "fatsecret") {
+        const data = await getFoodById(result.foodId);
+
+        // на всякий случай: иногда бэк может вернуть {food: {...}}
+        const fatProduct = data?.food || data;
+        openProductModal(fatProduct);
+        return;
+      }
+
+      // fallback
+      setIsAddBarcodeModalOpen(true);
+    } catch (e) {
+      console.error("Barcode scan error:", e);
+      setIsAddBarcodeModalOpen(true);
+    }
   };
-
 
   return (
     <>
@@ -50,7 +78,7 @@ export const SearchForm = () => {
         <Label>
           Write your meal
           <Input
-          placeholder="Enter product name"
+            placeholder="Enter product name"
             onChange={handleChange}
             value={localProduct}
             type="text"
@@ -58,12 +86,16 @@ export const SearchForm = () => {
             required
           />
         </Label>
-        <Button type="submit">Search <CiSearch/></Button>
-        <Button type="button" onClick={() => setIsScannerOpen(true)}>
-         <FiCamera />
 
+        <Button type="submit">
+          Search <CiSearch />
+        </Button>
+
+        <Button type="button" onClick={() => setIsScannerOpen(true)}>
+          <FiCamera />
         </Button>
       </Form>
+
       {isScannerOpen && (
         <ScannerOverlay>
           <ScannerContainer>
@@ -73,6 +105,13 @@ export const SearchForm = () => {
             </CloseButton>
           </ScannerContainer>
         </ScannerOverlay>
+      )}
+
+      {isAddBarcodeModalOpen && (
+        <ModalBarcodeProduct
+          barcode={scannedBarcode}
+          handleClose={() => setIsAddBarcodeModalOpen(false)}
+        />
       )}
     </>
   );

@@ -11,11 +11,18 @@ import { PersonalInfo } from "../PersonalInfo/PersonalInfo";
 import { WelcomeModal } from "../welcomeModal/welcomeModal";
 import axios from "axios";
 import { SuggestedProducts } from "../SuggestedProducts/SuggestedProducts";
+
+// ✅ ВАЖНО: импорт твоей общей модалки
+import { Modal } from "../Modal/Modal";
+
 export const App = () => {
-  const { isSubmitted } = useContext(ProductContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const [isFirstVisit, setIsFirstVisit] = useState(false); 
+  const { isSubmitted, isProductModalOpen, isProductModalClosing, closeProductModal, modalProduct } =
+    useContext(ProductContext);
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // PersonalInfo
+  const [isClosing, setIsClosing] = useState(false); // PersonalInfo
+
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
   const [suggested, setSuggested] = useState([]);
 
@@ -25,11 +32,11 @@ export const App = () => {
 
   const fetchSuggested = async () => {
     const response = await axios.get(`${url}/history`, {
-      params: { userId: user }
+      params: { userId: user },
     });
 
     const productMap = new Map();
-    const treshold = 3; // Минимальное количество использований для отображения
+    const treshold = 3;
 
     for (const entry of response.data.history) {
       const products = entry._doc?.products || entry.products;
@@ -38,40 +45,36 @@ export const App = () => {
       for (const product of products) {
         const key = `${product.name}|${product.metric_serving_unit}`;
         const count = productMap.get(key)?.count || 0;
-
         productMap.set(key, { ...product, count: count + 1 });
       }
     }
 
     const frequent = [...productMap.values()]
-      .filter(p => p.count >= treshold)
+      .filter((p) => p.count >= treshold)
       .sort((a, b) => b.count - a.count);
 
     setSuggested(frequent);
   };
 
   useEffect(() => {
- 
-    fetchSuggested()
-   
+    fetchSuggested();
 
-    const  checkUser = async(user) => {
+    const checkUser = async (user) => {
       const response = await axios.get(`${url}/first-open`, {
-        params: {user},
+        params: { user },
       });
-      if(response.data){
-        setIsFirstVisit(true)
-        setIsWelcomeModalOpen(true)
-        return
+      if (response.data) {
+        setIsFirstVisit(true);
+        setIsWelcomeModalOpen(true);
       }
-      return
-    }
-    checkUser(user)
+    };
+
+    checkUser(user);
 
     tg.ready();
-    console.log("Telegram WebApp is ready");
   }, [user]);
 
+  // PersonalInfo modal
   const openModal = () => {
     setIsModalOpen(true);
     setIsClosing(false);
@@ -88,23 +91,32 @@ export const App = () => {
 
   const closeWelcomeModal = () => {
     setIsWelcomeModalOpen(false);
-    setIsFirstVisit(false); // Сброс состояния первого визита
-  }
+    setIsFirstVisit(false);
+  };
 
   return (
     <Container>
       <Header onOpenModal={openModal} />
-      <PersonalInfo
-        isOpen={isModalOpen}
-        isClosing={isClosing}
-        onClose={closeModal}
-      />
-      <SearchForm></SearchForm>
-      <SuggestedProducts products = {suggested} />
+
+      <PersonalInfo isOpen={isModalOpen} isClosing={isClosing} onClose={closeModal} />
+
+      <SearchForm />
+
+      <SuggestedProducts products={suggested} />
+
       {isSubmitted && <ResultsTable />}
-      {isFirstVisit && <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal}/>}
+
+      {isFirstVisit && <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal} />}
+
+      {/* ✅ ОДНА ОБЩАЯ МОДАЛКА ПРОДУКТА ДЛЯ ЛИСТА И ДЛЯ СКАНЕРА */}
+      <Modal
+        isOpen={isProductModalOpen}
+        isClosing={isProductModalClosing}
+        onClose={closeProductModal}
+        product={modalProduct}
+      />
+
       <ToastContainer position="top-center" autoClose={2000} />
     </Container>
-    
   );
 };

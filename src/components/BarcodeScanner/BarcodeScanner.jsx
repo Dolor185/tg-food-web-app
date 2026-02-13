@@ -1,43 +1,49 @@
-import React, { useEffect } from "react";
-import Quagga from "quagga";
-import "./BarcodeScanner.css"; // Импортируем стили
+import { useEffect, useRef } from "react";
+import { BrowserMultiFormatReader } from "@zxing/browser";
 
 export const BarcodeScanner = ({ onDetected }) => {
-  useEffect(() => {
-    Quagga.init(
-      {
-        inputStream: {
-          type: "LiveStream",
-          constraints: {
-            width: 640,
-            height: 480,
-            facingMode: "environment",
-          },
-        },
-        decoder: {
-          readers: ["ean_reader"], // Для чтения GTIN-13
-        },
-      },
-      (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        Quagga.start();
-      }
-    );
+  const videoRef = useRef(null);
 
-    Quagga.onDetected((result) => {
-      if (result && result.codeResult && result.codeResult.code) {
-        onDetected(result.codeResult.code);
-        Quagga.stop(); // Останавливаем сканер после успешного сканирования
+  useEffect(() => {
+    const reader = new BrowserMultiFormatReader();
+    let controls;
+
+    (async () => {
+      try {
+        const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+        const backCam =
+          devices.find((d) => /back|rear|environment/i.test(d.label))?.deviceId ||
+          devices[0]?.deviceId;
+
+        controls = await reader.decodeFromVideoDevice(backCam, videoRef.current, (result) => {
+          const text = result?.getText?.();
+          if (text) {
+            onDetected(text);
+            if (controls) controls.stop();
+            reader.reset?.();
+          }
+        });
+      } catch (e) {
+        console.error(e);
       }
-    });
+    })();
 
     return () => {
-      Quagga.stop();
+      try {
+        if (controls) controls.stop();
+      } catch (e) {}
+      try {
+        reader.reset?.();
+      } catch (e) {}
     };
   }, [onDetected]);
 
-  return <div id="interactive" className="viewport" />;
+  return (
+    <video
+      ref={videoRef}
+      muted
+      playsInline
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+  );
 };

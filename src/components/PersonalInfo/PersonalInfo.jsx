@@ -18,6 +18,18 @@ import { CustomLimits } from "./CustomLimits";
 import { CustomProductsList } from "./CustomProduct/CustomProductsList";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+const toLocalYMD = (d = new Date()) => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const addDaysLocalYMD = (days) => {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return toLocalYMD(d);
+};
 
 export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   if (!isOpen) return null;
@@ -32,7 +44,8 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const [maxValues, setMaxValues] = useState({});
   const [period, setPeriod] = useState(1);
   const [modalView, setModalView] = useState("main");
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => toLocalYMD());
+
 
   const getData = useCallback(async () => {
     try {
@@ -132,9 +145,9 @@ if (nutrientData && nutrientData.totalNutrients) {
   };
 
   const onDateChange = (e) => {
-    const selectedDate = new Date(e.target.value).toISOString().slice(0, 10);
-    setDate(selectedDate);
-  }
+    setDate(e.target.value);
+  };
+  
 
   const usedCalories = typeof data?.calories === 'number' ? data.calories : 0;
   const remainingCalories = Math.max((maxValues.dailyCalories || 0) - usedCalories, 0);
@@ -217,15 +230,35 @@ if (nutrientData && nutrientData.totalNutrients) {
             <Button onClick={handleRestoreDefaults} style={{ marginTop: "10px" }}>
             Restore recommended values            </Button>
 
-              <select onChange={onDateChange} value={date} type="date" style={{ marginTop: "10px", width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", backgroundColor: "var(--tg-theme-secondary-bg-color)", color: "var(--tg-theme-text-color)" }}>
-              <option value={new Date().toISOString().slice(0, 10)}>{new Date().toISOString().slice(0, 10)}</option>
-              <option value={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}>{new Date(Date.now() + 86400000).toISOString().slice(0, 10)}</option>  
-              </select>
+            <select
+  onChange={onDateChange}
+  value={date}
+  style={{
+    marginTop: "10px",
+    width: "100%",
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    backgroundColor: "var(--tg-theme-secondary-bg-color)",
+    color: "var(--tg-theme-text-color)",
+  }}
+>
+  {[0, 1].map((i) => {
+    const v = addDaysLocalYMD(i);
+    return (
+      <option key={v} value={v}>
+        {v}
+      </option>
+    );
+  })}
+</select>
+
 
           </>
         );
     }
   };
+
 
   return (
     <>

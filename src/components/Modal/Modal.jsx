@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Row, Section, ChartWrapper, StyledSelect } from "./Modal.styled";
 import { ModalOverlay, ModalContent, CloseButton } from "../../styles/Modal.styled";
 import { Pie } from "react-chartjs-2";
@@ -6,79 +6,83 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {Input, Button, Form} from '../../styles/FormElements.styled'
+import { Input, Button, Form } from "../../styles/FormElements.styled";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 export const Modal = ({ isOpen, isClosing, onClose, product }) => {
-  if (!isOpen) return null;
+  const url = process.env.REACT_APP_URL;
+
+  // ✅ safe: если product ещё не готов
+  const servingsArr = useMemo(() => {
+    const s = product?.servings?.serving;
+    if (!s) return [];
+    return Array.isArray(s) ? s : [s];
+  }, [product]);
 
   const [value, setValue] = useState("");
+  const [selectedServing, setSelectedServing] = useState(null);
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [meal, setMeal] = useState("");
+
+  // ✅ главное: обновлять selectedServing на новый продукт
+  useEffect(() => {
+    if (!isOpen) return;
+    if (servingsArr.length > 0) setSelectedServing(servingsArr[0]);
+    setValue("");
+    setMeal("");
+    setDate(new Date().toISOString().slice(0, 10));
+  }, [isOpen, servingsArr]);
+
+  if (!isOpen) return null;
+  if (!product) return null;
+  if (!selectedServing) return null;
+
   const tg = window.Telegram.WebApp;
   const user = tg.initDataUnsafe?.user?.id;
-  const url = process.env.REACT_APP_URL;
-  const [selectedServing, setSelectedServing] = useState(
-    product.servings.serving[0]
-  );
-  const [ date, setDate] = useState(new Date().toISOString().slice(0, 10));
-  const [meal, setMeal] = useState('');
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
 
   const handleServingChange = (e) => {
     const servingId = e.target.value;
-    const serving = product.servings.serving.find(
-      (s) => s.serving_id === servingId
-    );
-    setSelectedServing(serving);
+    const serving = servingsArr.find((s) => String(s.serving_id) === String(servingId));
+    setSelectedServing(serving || servingsArr[0]);
   };
 
   const submitForm = async (e) => {
     e.preventDefault();
     const amount = parseFloat(value);
-    onClose();
+    if (!amount || Number.isNaN(amount)) return;
 
-toast.success("Product added successfully");
+    onClose();
+    toast.success("Product added successfully");
 
     let factor;
-
     if (selectedServing.number_of_units === "1.000") {
-      // Если сервинг штучный, используем количество сервингов
       factor = amount;
     } else {
-      // Если сервинг в граммах, используем вес
-      factor = amount / parseFloat(selectedServing.metric_serving_amount);
+      factor = amount / parseFloat(selectedServing.metric_serving_amount || "1");
     }
+
     const entryId = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 
     const nutrients = {
-      calories: selectedServing.calories * factor,
-      protein: selectedServing.protein * factor,
-      fat: selectedServing.fat * factor,
-      carbs: selectedServing.carbohydrate * factor,
+      calories: Number(selectedServing.calories || 0) * factor,
+      protein: Number(selectedServing.protein || 0) * factor,
+      fat: Number(selectedServing.fat || 0) * factor,
+      carbs: Number(selectedServing.carbohydrate || 0) * factor,
     };
+
     const productPayload = {
-      entryId:entryId,
+      entryId,
       id: product.food_id,
       name: product.food_name,
-      amount: amount,
+      amount,
       metric_serving_unit: selectedServing.serving_description,
-      nutrients: {
-        calories: selectedServing.calories * factor,
-        protein: selectedServing.protein * factor,
-        fat: selectedServing.fat * factor,
-        carbs: selectedServing.carbohydrate * factor,
-      },
+      nutrients,
+      source: product.source || "unknown",
     };
 
     try {
-      await axios.post(`${url}/add-update`, 
-        
-        { user, date, meal, nutrients, product:productPayload }
-      );
-      // onClose();
+      await axios.post(`${url}/add-update`, { user, date, meal, nutrients, product: productPayload });
     } catch (error) {
       console.error("Ошибка при отправке данных:", error);
     }
@@ -90,9 +94,9 @@ toast.success("Product added successfully");
       {
         label: "Nutritional Values",
         data: [
-          selectedServing.protein,
-          selectedServing.fat,
-          selectedServing.carbohydrate,
+          Number(selectedServing.protein || 0),
+          Number(selectedServing.fat || 0),
+          Number(selectedServing.carbohydrate || 0),
         ],
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
         hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
@@ -104,29 +108,11 @@ toast.success("Product added successfully");
     plugins: {
       datalabels: {
         color: "white",
-        font: {
-          weight: "bold",
-        },
-        formatter: (value) => `${value}g`,
+        font: { weight: "bold" },
+        formatter: (v) => `${v}g`,
       },
     },
   };
-
-  const getDitails = async(product) => {
-
-    try {
-      const response  = await axios.get(`${url}/food-details`, {
-        params: {
-          id: product.food_id
-        }})
-        if (response.data){
-          console.log(response);
-        }
-      
-    } catch (error) {
-      console.log("Ошибка при получении данных:", error.message);
-    }
-  }
 
   return (
     <ModalOverlay $isClosing={isClosing}>
@@ -138,40 +124,48 @@ toast.success("Product added successfully");
         <Form onSubmit={submitForm}>
           <Row>
             <Input
-              type="text"
-              placeholder="Weitht (grams)"
+              type="number"
+              placeholder="Weight"
               value={value}
-              onChange={handleChange}
+              onChange={(e) => setValue(e.target.value)}
               required
             />
+
             <StyledSelect onChange={handleServingChange} value={selectedServing.serving_id}>
-              {product.servings.serving.map((serving) => (
-                <option key={serving.serving_id} value={serving.serving_id}>
-                  {serving.serving_description}
+              {servingsArr.map((s) => (
+                <option key={s.serving_id} value={s.serving_id}>
+                  {s.serving_description}
                 </option>
               ))}
             </StyledSelect>
+
             <StyledSelect onChange={(e) => setMeal(e.target.value)} value={meal}>
+              <option value="">Meal</option>
               <option value="Breakfast">Breakfast</option>
               <option value="Lunch">Lunch</option>
               <option value="Dinner">Dinner</option>
               <option value="Snacks">Snacks</option>
             </StyledSelect>
+
             <StyledSelect onChange={(e) => setDate(e.target.value)} value={date}>
-              <option value={new Date().toISOString().slice(0, 10)}>{new Date().toISOString().slice(0, 10)}</option>
-              <option value={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}>{new Date(Date.now() + 86400000).toISOString().slice(0, 10)}</option>
-              <option value={new Date(Date.now() + 172800000).toISOString().slice(0, 10)}>{new Date(Date.now() + 172800000).toISOString().slice(0, 10)}</option>
-              <option value={new Date(Date.now() + 259200000).toISOString().slice(0, 10)}>{new Date(Date.now() + 259200000).toISOString().slice(0, 10)}</option>
-              <option value={new Date(Date.now() + 345600000).toISOString().slice(0, 10)}>{new Date(Date.now() + 345600000).toISOString().slice(0, 10)}</option> 
-              <option value={new Date(Date.now() + 432000000).toISOString().slice(0, 10)}>{new Date(Date.now() + 432000000).toISOString().slice(0, 10)}</option>
-              <option value={new Date(Date.now() + 518400000).toISOString().slice(0, 10)}>{new Date(Date.now() + 518400000).toISOString().slice(0, 10)}</option>
-              </StyledSelect>
+              {[0, 1, 2, 3, 4, 5, 6].map((d) => {
+                const dt = new Date(Date.now() + d * 86400000).toISOString().slice(0, 10);
+                return (
+                  <option key={dt} value={dt}>
+                    {dt}
+                  </option>
+                );
+              })}
+            </StyledSelect>
           </Row>
+
           <Button type="submit">Add</Button>
         </Form>
 
         <Section>
-          <p>Nutrients per {selectedServing.metric_serving_amount} {selectedServing.metric_serving_unit}:</p>
+          <p>
+            Nutrients per {selectedServing.metric_serving_amount} {selectedServing.metric_serving_unit}:
+          </p>
           <p>Calories: {selectedServing.calories} kcal</p>
           <p>Proteins: {selectedServing.protein} g</p>
           <p>Fats: {selectedServing.fat} g</p>
@@ -181,7 +175,6 @@ toast.success("Product added successfully");
         <ChartWrapper>
           <Pie data={data} options={options} />
         </ChartWrapper>
-        <button onClick={()=>{getDitails(product)}}>Get details</button>
       </ModalContent>
     </ModalOverlay>
   );

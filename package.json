@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@zxing/browser": "^0.1.5",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "chartjs-plugin-datalabels": "^2.2.0",
