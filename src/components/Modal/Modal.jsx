@@ -151,7 +151,7 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
               ))}
             </StyledSelect>
 
-            <StyledSelect onChange={(e) => setMeal(e.target.value)} value={meal}>
+            <StyledSelect onChange={(e) => setMeal(e.target.value)} value={meal} required>
               <option value="">Meal</option>
               <option value="Breakfast">Breakfast</option>
               <option value="Lunch">Lunch</option>

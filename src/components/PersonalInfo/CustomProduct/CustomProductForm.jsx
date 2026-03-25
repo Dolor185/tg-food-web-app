@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";  
+import axios from "axios";
 import { toast } from "react-toastify";
 import { Label, Input, Form, Button } from "../../../styles/FormElements.styled";
 
@@ -9,18 +9,19 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
     protein: 0,
     fat: 0,
     carbs: 0,
-    calories: 0,
   });
 
   const url = process.env.REACT_APP_URL;
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
+
     try {
       await axios.post(`${url}/add-custom`, {
         userId,
         product,
       });
+
       toast.success("Продукт добавлен!");
       if (onSuccess) onSuccess();
     } catch (error) {
@@ -30,48 +31,55 @@ export const CustomProductForm = ({ userId, onSuccess }) => {
   };
 
   return (
-    <Form onSubmit={handleAddProduct}> 
+    <Form onSubmit={handleAddProduct}>
       <Label>
         Name of product:
         <Input
           type="text"
           value={product.name}
+          required
           onChange={(e) =>
             setProduct({ ...product, name: e.target.value })
           }
-        />    
+        />
       </Label>
+
       <Label>
         Proteins (g):
         <Input
           type="number"
+          min="0"
           value={product.protein}
           onChange={(e) =>
             setProduct({ ...product, protein: parseFloat(e.target.value) || 0 })
           }
         />
       </Label>
+
       <Label>
         Fats (g):
         <Input
           type="number"
+          min="0"
           value={product.fat}
           onChange={(e) =>
             setProduct({ ...product, fat: parseFloat(e.target.value) || 0 })
           }
         />
       </Label>
+
       <Label>
         Carbs (g):
         <Input
           type="number"
+          min="0"
           value={product.carbs}
           onChange={(e) =>
             setProduct({ ...product, carbs: parseFloat(e.target.value) || 0 })
           }
         />
       </Label>
- 
+
       <Button type="submit">Add</Button>
     </Form>
   );
