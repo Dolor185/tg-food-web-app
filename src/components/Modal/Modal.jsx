@@ -9,6 +9,18 @@ import { toast } from "react-toastify";
 import { Input, Button, Form } from "../../styles/FormElements.styled";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+const toLocalYMD = (d = new Date()) => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const addDaysLocalYMD = (days) => {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return toLocalYMD(d);
+};
 
 export const Modal = ({ isOpen, isClosing, onClose, product }) => {
   const url = process.env.REACT_APP_URL;
@@ -22,7 +34,7 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
 
   const [value, setValue] = useState("");
   const [selectedServing, setSelectedServing] = useState(null);
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(toLocalYMD());
   const [meal, setMeal] = useState("");
 
   // ✅ главное: обновлять selectedServing на новый продукт
@@ -31,7 +43,7 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
     if (servingsArr.length > 0) setSelectedServing(servingsArr[0]);
     setValue("");
     setMeal("");
-    setDate(new Date().toISOString().slice(0, 10));
+    setDate(toLocalYMD());
   }, [isOpen, servingsArr]);
 
   if (!isOpen) return null;
@@ -148,15 +160,15 @@ export const Modal = ({ isOpen, isClosing, onClose, product }) => {
             </StyledSelect>
 
             <StyledSelect onChange={(e) => setDate(e.target.value)} value={date}>
-              {[0, 1, 2, 3, 4, 5, 6].map((d) => {
-                const dt = new Date(Date.now() + d * 86400000).toISOString().slice(0, 10);
-                return (
-                  <option key={dt} value={dt}>
-                    {dt}
-                  </option>
-                );
-              })}
-            </StyledSelect>
+  {[0, 1, 2, 3, 4, 5, 6].map((d) => {
+    const dt = addDaysLocalYMD(d);
+    return (
+      <option key={dt} value={dt}>
+        {dt}
+      </option>
+    );
+  })}
+</StyledSelect>
           </Row>
 
           <Button type="submit">Add</Button>

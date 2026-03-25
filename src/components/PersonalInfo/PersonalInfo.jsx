@@ -46,6 +46,17 @@ export const PersonalInfo = ({ isOpen, isClosing, onClose }) => {
   const [modalView, setModalView] = useState("main");
   const [date, setDate] = useState(() => toLocalYMD());
 
+  const handleNewDay = async () => {
+    try {
+      await axios.post(`${url}/manual-reset`, { userId: user });
+      toast.success("New day started");
+      getData();
+    } catch (error) {
+      console.error("Ошибка при запуске нового дня:", error);
+      toast.error("Error starting new day");
+    }
+  };
+
 
   const getData = useCallback(async () => {
     try {
@@ -205,11 +216,13 @@ if (nutrientData && nutrientData.totalNutrients) {
             <CloseButton onClick={onClose}>×</CloseButton>
             <Title>{tg.initDataUnsafe?.user?.username}'s personal info</Title>
             <Subtitle>Here is your daily nutrient goals  and list of products</Subtitle>
-<ButtonsRow>
-            <Button onClick={() => setModalView("period")}>Choose period</Button>
-            <Button onClick={() => setModalView("customLimits")}>Custom limits</Button>
-            <Button onClick={() => setModalView("history")}>History</Button>
-            <Button onClick={() => setModalView("customProducts")}>My products</Button></ButtonsRow>
+            <ButtonsRow>
+  <Button onClick={() => setModalView("period")}>Choose period</Button>
+  <Button onClick={() => setModalView("customLimits")}>Custom limits</Button>
+  <Button onClick={() => setModalView("history")}>History</Button>
+  <Button onClick={() => setModalView("customProducts")}>My products</Button>
+  <Button onClick={handleNewDay}>Start New Day</Button>
+</ButtonsRow>
             {data && <NutrientBars data={data} maxValues={maxValues} />}
 
             <ChartWrapper style={{ width: "100%", height: "250px" }}>
